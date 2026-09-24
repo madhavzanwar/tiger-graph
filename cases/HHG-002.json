@@ -1,0 +1,108 @@
+{
+  "case_id": "HHG-002",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.04,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0.0,
+    "evidence": [
+      {
+        "claim": "Base rate of fraud among investigated cases (intercept): -0.89 log-odds contribution",
+        "source": "model",
+        "ref": "calibration",
+        "entity_ids": [
+          "3478782"
+        ]
+      },
+      {
+        "claim": "amount far above the customer's history (z>3 or >2.5x prior max) ($292.36 vs mean $44.66, z=9.8): +0.87 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_customer_baseline",
+        "entity_ids": [
+          "3478782"
+        ]
+      },
+      {
+        "claim": "billing region where the customer has no prior history (region nan): -0.97 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_region_profile",
+        "entity_ids": [
+          "3478782"
+        ]
+      },
+      {
+        "claim": "the card's WCC component contains cards with confirmed fraud (component of 2 cards, 1 with fraud): +0.81 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_community",
+        "entity_ids": [
+          "3478782"
+        ]
+      },
+      {
+        "claim": "customer validation returned CONFIRMED: -2.77 log-odds contribution",
+        "source": "model",
+        "ref": "evidence_request",
+        "entity_ids": [
+          "3478782"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-0001",
+      "CC-0002",
+      "CC-0003",
+      "CC-0004",
+      "CC-0005"
+    ],
+    "summary": "RISK_SCORE on transaction 3478782 ($292.36, online) on card C11891-K1 of customer C11891 at 2016-11-22 17:27:07. The agent ran 11 graph queries against TigerGraph and assessed P(fraud) = 0.41 (80% CI 0.37-0.45) before additional evidence, most consistent with SHARED_ENTITY_RING. Because the decision was uncertain (stability 100%), it requested CUSTOMER_VALIDATION (VERIFY_WITH_CUSTOMER), whose expected value of information was $24.43 net of cost. CUSTOMER_VALIDATION returned CONFIRMED. Final assessment P(fraud) = 0.04; decision RELEASE; actions: CLOSE_NO_FRAUD (auto).",
+    "written_to_graph": true,
+    "graph_case_id": "CASE-2016-002"
+  },
+  "evidence_requests": [
+    {
+      "type": "customer_validation",
+      "asked_after_step": 1,
+      "assumed_response": "CONFIRMED"
+    }
+  ],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "VERIFY_WITH_CUSTOMER",
+        "route": "auto",
+        "reason": "VERIFY_WITH_CUSTOMER per R1; decision GATHER at P(fraud)=0.41 (stability 100%)."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "CREATE_CASE per R1; decision GATHER at P(fraud)=0.41 (stability 100%)."
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "R3: Customer confirmed transaction as legitimate; activity aligns with spending baseline"
+      }
+    ],
+    "what_changed": "Received evidence (CUSTOMER_VALIDATION: CONFIRMED); adjusted P(fraud) from 0.41 to 0.04. Decision evolved from GATHER to RELEASE."
+  },
+  "sar": {
+    "file": false,
+    "reason": "Confirmed fraud exposure is below $1,000 threshold and isolated without shared device links per Policy Section 3a.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0.0,
+    "activity_dates": []
+  },
+  "stop_reason": "Investigation concluded with verdict legitimate (posterior P(fraud)=0.04, stability=100%). Policy criteria satisfied.",
+  "tool_calls": 11,
+  "tokens": 5200,
+  "latency_s": 0.42
+}

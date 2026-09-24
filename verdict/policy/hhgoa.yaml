@@ -1,0 +1,105 @@
+version: hhgoa-1.0
+source_document: README.md
+
+routes: [auto, L1, L2]
+
+actions:
+  ALLOW_TRANSACTION: {route: auto, class: release, clause: R1}
+  MONITOR_CARD: {route: auto, class: neutral, clause: R4}
+  MONITOR_CONNECTED_CARDS: {route: auto, class: neutral, clause: R6}
+  WARN_CUSTOMER: {route: auto, class: neutral, clause: R7}
+  VERIFY_WITH_CUSTOMER: {route: auto, class: evidence, evidence_kind: CUSTOMER_VALIDATION, clause: R1}
+  STEP_UP_AUTH: {route: auto, class: evidence, evidence_kind: STEP_UP_AUTH, clause: R1}
+  REQUEST_ANALYST_INFO: {route: auto, class: evidence, evidence_kind: ANALYST_INFO, clause: R8}
+  GENERATE_REPORT: {route: auto, class: neutral, clause: R7}
+  CREATE_CASE: {route: auto, class: neutral, clause: R2}
+  ESCALATE_TO_ANALYST: {route: auto, class: neutral, clause: R8}
+  DECLINE_TRANSACTION: {route: L1, class: protect, clause: R4}
+  BLOCK_CARD:
+    route: L1
+    class: protect
+    clause: R2
+    route_rules:
+      - {when: "amount_at_risk > 2500", route: L2}
+  BLOCK_ALL_CARDS: {route: L2, class: protect, clause: R10}
+  FILE_REPORT: {route: L2, class: protect, clause: R2}
+  CLOSE_NO_FRAUD: {route: auto, class: release, clause: R3}
+
+conflicts:
+  release: [protect]
+  protect: [release]
+
+rules:
+  - id: R1
+    when: "decision == 'GATHER' and phase == 'BEFORE_EVIDENCE'"
+    recommend: [VERIFY_WITH_CUSTOMER, CREATE_CASE]
+  - id: R1
+    when: "decision == 'GATHER' and phase == 'AFTER_EVIDENCE'"
+    recommend: [CREATE_CASE, MONITOR_CARD]
+  - id: R2
+    when: "CUSTOMER_VALIDATION == 'DENIED'"
+    recommend: [BLOCK_CARD, CREATE_CASE]
+  - id: R2
+    when: "CUSTOMER_VALIDATION == 'DENIED' and (amount_at_risk > 1000 or ring_detected)"
+    recommend: [FILE_REPORT]
+  - id: R3
+    when: "CUSTOMER_VALIDATION == 'CONFIRMED'"
+    recommend: [CLOSE_NO_FRAUD]
+  - id: R4
+    when: "CUSTOMER_VALIDATION == 'NO_REPLY'"
+    recommend: [MONITOR_CARD, DECLINE_TRANSACTION]
+  - id: R5
+    when: "pattern == 'CARD_TESTING' and small_auths_1h >= 3 and phase == 'BEFORE_EVIDENCE'"
+    recommend: [DECLINE_TRANSACTION, STEP_UP_AUTH]
+  - id: R5
+    when: "pattern == 'CARD_TESTING' and cleared_purchase_over_100 > 100 and p_fraud >= 0.5"
+    recommend: [BLOCK_CARD]
+  - id: R6
+    when: "ring_detected and p_fraud >= 0.5"
+    recommend: [CREATE_CASE, FILE_REPORT, MONITOR_CONNECTED_CARDS]
+  - id: R8
+    when: "decision == 'GATHER' and amount_at_risk > 500"
+    recommend: [ESCALATE_TO_ANALYST]
+  - id: R9
+    when: "undocumented_pattern and p_fraud >= 0.5"
+    recommend: [CREATE_CASE, FILE_REPORT, ESCALATE_TO_ANALYST]
+  - id: R2
+    when: "decision == 'PROTECT'"
+    recommend: [BLOCK_CARD, CREATE_CASE]
+  - id: R3
+    when: "decision == 'RELEASE' and phase == 'AFTER_EVIDENCE'"
+    recommend: [CLOSE_NO_FRAUD]
+  - id: R1
+    when: "decision == 'RELEASE' and phase == 'BEFORE_EVIDENCE'"
+    recommend: [ALLOW_TRANSACTION, MONITOR_CARD]
+
+decision_overrides:
+  - id: R3
+    when: "CUSTOMER_VALIDATION == 'CONFIRMED' and p_fraud < 0.5 and not undocumented_pattern"
+    decision: RELEASE
+  - id: R2
+    when: "CUSTOMER_VALIDATION == 'DENIED'"
+    decision: PROTECT
+  - id: R4
+    when: "CUSTOMER_VALIDATION == 'NO_REPLY' and p_fraud >= 0.3"
+    decision: PROTECT
+
+forbid:
+  - id: R10
+    action: BLOCK_ALL_CARDS
+    unless: "n_linked_prior_fraud_cards >= 2 or credentials_compromised"
+
+sar:
+  - id: R2
+    when: "p_fraud >= 0.8 and (amount_at_risk > 1000 or ring_detected or pattern == 'UNDOCUMENTED')"
+
+loss:
+  false_positive_base: 120
+  false_positive_pct: 0.02
+  follow_on_loss_factor: 0.5
+evidence_costs:
+  STEP_UP_AUTH: {fixed: 2, exposure_pct: 0.02}
+  CUSTOMER_VALIDATION: {fixed: 5, exposure_pct: 0.10}
+  ANALYST_INFO: {fixed: 40, exposure_pct: 0.05}
+stopping:
+  stability_to_act: 0.9

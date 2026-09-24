@@ -1,0 +1,12 @@
+CREATE OR REPLACE QUERY inv_prior_cases(VERTEX<Transaction> txn) FOR GRAPH Verdict SYNTAX V1 {
+  /* Case memory: prior cases on this customer or card that were opened before t0. */
+  MaxAccum<DATETIME> @@t0;
+  S = {txn};
+  S = SELECT s FROM S:s ACCUM @@t0 += s.ts;
+  CU = SELECT c FROM S:s -(rev_MADE:e)-> Customer:c;
+  CA = SELECT c FROM S:s -(PAID_WITH:e)-> Card:c;
+  P1 = SELECT f FROM CU:c -(rev_CASE_CUSTOMER:e)-> FraudCase:f WHERE f.opened_at < @@t0;
+  P2 = SELECT f FROM CA:c -(rev_CASE_CARD:e)-> FraudCase:f WHERE f.opened_at < @@t0;
+  P = P1 UNION P2;
+  PRINT P[P.case_id, P.opened_at, P.outcome, P.pattern, P.actions_taken, P.evidence_requested, P.evidence_result, P.summary] AS prior_cases;
+}

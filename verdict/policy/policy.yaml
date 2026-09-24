@@ -1,0 +1,126 @@
+# Fraud policy compiled to rules. Every rule carries the clause id it implements so recommendations cite policy.
+# NOTE: action identifiers and routes mirror the (synthetic) fraud_policy.md. When the official HHGOA policy is
+# available, update identifiers/routes/rules here - the engine and agent read everything from this file.
+version: synthetic-1
+source_document: fraud_policy.md
+
+routes: [AUTO, L1_ANALYST, L2_FRAUD_MANAGER, COMPLIANCE]
+
+actions:
+  ALLOW_TRANSACTION:   {route: AUTO, class: release, clause: POL-2}
+  MONITOR_CARD:        {route: AUTO, class: neutral, clause: POL-2}
+  MONITOR_ACCOUNT:     {route: AUTO, class: neutral, clause: POL-2}
+  WARN_CUSTOMER:       {route: AUTO, class: neutral, clause: POL-2}
+  STEP_UP_AUTH:        {route: AUTO, class: evidence, evidence_kind: STEP_UP_AUTH, clause: POL-2}
+  CONTACT_CUSTOMER:    {route: AUTO, class: evidence, evidence_kind: CUSTOMER_VALIDATION, clause: POL-2}
+  REQUEST_ANALYST_INFO: {route: AUTO, class: evidence, evidence_kind: ANALYST_INFO, clause: POL-2}
+  CREATE_CASE:         {route: AUTO, class: neutral, clause: POL-2}
+  ESCALATE_TO_ANALYST: {route: AUTO, class: neutral, clause: POL-2}
+  DECLINE_TRANSACTION: {route: L1_ANALYST, class: protect, clause: POL-2}
+  BLOCK_CARD:
+    route: L1_ANALYST
+    class: protect
+    clause: POL-2
+    route_rules:
+      - {when: "amount_at_risk > 2500", route: L2_FRAUD_MANAGER}
+  BLOCK_ALL_CARDS:     {route: L2_FRAUD_MANAGER, class: protect, clause: POL-2}
+  FILE_REPORT:         {route: COMPLIANCE, class: protect, clause: POL-4.1}
+  CLOSE_NO_FRAUD:      {route: L1_ANALYST, class: release, clause: POL-3.10}
+
+# Mutually inconsistent classes: the chosen decision decides which side survives.
+conflicts:
+  release: [protect]
+  protect: [release]
+
+rules:
+  # ---- decision-driven defaults (decision = PROTECT | RELEASE | GATHER from the value-of-information engine)
+  - id: POL-1.4
+    when: "decision == 'PROTECT' and phase == 'BEFORE_EVIDENCE'"
+    recommend: [DECLINE_TRANSACTION, BLOCK_CARD, CREATE_CASE]
+  - id: POL-1.4
+    when: "decision == 'PROTECT' and phase == 'AFTER_EVIDENCE'"
+    recommend: [BLOCK_CARD, CREATE_CASE]
+  - id: POL-1.4
+    when: "decision == 'RELEASE' and phase == 'BEFORE_EVIDENCE'"
+    recommend: [ALLOW_TRANSACTION, MONITOR_CARD]
+  - id: POL-1.4
+    when: "decision == 'GATHER'"
+    recommend: [CREATE_CASE, MONITOR_CARD]
+  # ---- pattern rules
+  - id: POL-3.1
+    when: "pattern == 'CARD_TESTING' and small_auths_1h >= 3 and phase == 'BEFORE_EVIDENCE'"
+    recommend: [STEP_UP_AUTH]
+  - id: POL-3.1
+    when: "pattern == 'CARD_TESTING' and cleared_purchase_over_100 > 100 and p_fraud >= 0.5"
+    recommend: [BLOCK_CARD]
+  - id: POL-3.2
+    when: "pattern == 'CNP_NEW_DEVICE' and proxy and p_fraud < 0.9 and phase == 'BEFORE_EVIDENCE'"
+    recommend: [CONTACT_CUSTOMER]
+    defer: [BLOCK_CARD]          # contact before any block
+  - id: POL-3.3
+    when: "CUSTOMER_VALIDATION == 'NO_REPLY'"
+    recommend: [DECLINE_TRANSACTION, MONITOR_CARD]
+  - id: POL-3.4
+    when: "CUSTOMER_VALIDATION == 'DENIED'"
+    recommend: [BLOCK_CARD]
+  - id: POL-3.4
+    when: "CUSTOMER_VALIDATION == 'CONFIRMED' and decision != 'PROTECT'"
+    recommend: [ALLOW_TRANSACTION, MONITOR_CARD]
+  - id: POL-3.5
+    when: "pattern == 'OUT_OF_REGION' and concurrent_home_activity and phase == 'BEFORE_EVIDENCE'"
+    recommend: [CONTACT_CUSTOMER]
+    defer: [BLOCK_CARD]          # block once the customer denies or does not reply
+  - id: POL-3.6
+    when: "pattern == 'ACCOUNT_TAKEOVER' and p_fraud >= 0.5"
+    recommend: [STEP_UP_AUTH, ESCALATE_TO_ANALYST]
+  - id: POL-3.6
+    when: "pattern == 'ACCOUNT_TAKEOVER' and wider_compromise and p_fraud >= 0.7"
+    recommend: [BLOCK_ALL_CARDS]
+  - id: POL-3.7
+    when: "ring_detected and p_fraud >= 0.5"
+    recommend: [CREATE_CASE, FILE_REPORT]
+  - id: POL-3.9
+    when: "undocumented_pattern and p_fraud >= 0.5"
+    recommend: [ESCALATE_TO_ANALYST]
+  - id: POL-3.10
+    when: "decision == 'RELEASE' and phase == 'AFTER_EVIDENCE'"
+    recommend: [CLOSE_NO_FRAUD, MONITOR_CARD]
+  - id: POL-1.4
+    when: "decision == 'PROTECT' and not wider_compromise"
+    recommend: [WARN_CUSTOMER]
+
+# The policy can override the loss-minimising decision once specific evidence is in (policy is authoritative).
+decision_overrides:
+  - id: POL-3.4
+    when: "CUSTOMER_VALIDATION == 'CONFIRMED' and p_fraud < 0.5 and not undocumented_pattern"
+    decision: RELEASE
+  - id: POL-3.4
+    when: "CUSTOMER_VALIDATION == 'DENIED'"
+    decision: PROTECT
+  - id: POL-3.3
+    when: "CUSTOMER_VALIDATION == 'NO_REPLY' and p_fraud >= 0.3"
+    decision: PROTECT
+
+forbid:
+  - id: POL-3.8
+    action: BLOCK_ALL_CARDS
+    unless: "wider_compromise"
+  - id: POL-3.9
+    action: CLOSE_NO_FRAUD
+    unless: "not undocumented_pattern"
+
+sar:
+  - id: POL-4.1
+    when: "p_fraud >= 0.8 and (amount_at_risk >= 1000 or ring_detected or pattern == 'ACCOUNT_TAKEOVER')"
+
+# Loss model for the value-of-information engine (USD).
+loss:
+  false_positive_base: 120       # blocking a genuine customer: card reissue, servicing cost, attrition risk
+  false_positive_pct: 0.02
+  follow_on_loss_factor: 0.5     # expected additional loss if fraud is allowed to continue
+evidence_costs:                  # friction + expected exposure while waiting
+  STEP_UP_AUTH: {fixed: 2, exposure_pct: 0.02}
+  CUSTOMER_VALIDATION: {fixed: 5, exposure_pct: 0.10}
+  ANALYST_INFO: {fixed: 40, exposure_pct: 0.05}
+stopping:
+  stability_to_act: 0.9          # act without more evidence when decision stability >= this and VOI <= 0

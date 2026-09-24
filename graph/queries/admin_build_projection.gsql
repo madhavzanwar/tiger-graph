@@ -1,0 +1,25 @@
+CREATE OR REPLACE QUERY admin_build_projection(INT max_entity_cards = 25) FOR GRAPH Verdict SYNTAX V2 {
+  /* Builds the Card-Card SHARES_ENTITY projection used by WCC / Louvain.
+     Two cards of DIFFERENT customers are linked when they transact through the same device or recipient
+     email domain; hub entities used by more than max_entity_cards cards are ignored. Admin-only (writes). */
+  TYPEDEF TUPLE<VERTEX<Card> card, STRING cust> CC;
+  SetAccum<CC> @cards;
+  SumAccum<INT> @@edges;
+  Dev = {Device.*};
+  Dev = SELECT d FROM Dev:d -(<USED_DEVICE)- Transaction:t -(PAID_WITH>)- Card:c ACCUM d.@cards += CC(c, c.customer_id);
+  Dev = SELECT d FROM Dev:d WHERE d.@cards.size() > 1 AND d.@cards.size() <= max_entity_cards
+        POST-ACCUM FOREACH x IN d.@cards DO FOREACH y IN d.@cards DO
+            IF getvid(x.card) < getvid(y.card) AND x.cust != y.cust THEN
+              INSERT INTO SHARES_ENTITY VALUES (x.card, y.card, 1.0, "device"), @@edges += 1
+            END
+          END END;
+  Em = {EmailDomain.*};
+  Em = SELECT m FROM Em:m -(<RECIPIENT_EMAIL)- Transaction:t -(PAID_WITH>)- Card:c ACCUM m.@cards += CC(c, c.customer_id);
+  Em = SELECT m FROM Em:m WHERE m.@cards.size() > 1 AND m.@cards.size() <= max_entity_cards
+       POST-ACCUM FOREACH x IN m.@cards DO FOREACH y IN m.@cards DO
+            IF getvid(x.card) < getvid(y.card) AND x.cust != y.cust THEN
+              INSERT INTO SHARES_ENTITY VALUES (x.card, y.card, 1.0, "recipient_email"), @@edges += 1
+            END
+          END END;
+  PRINT @@edges AS edges_inserted;
+}

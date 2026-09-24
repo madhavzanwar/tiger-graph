@@ -1,0 +1,110 @@
+{
+  "case_id": "HHG-003",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.98,
+    "pattern": "account_takeover",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3530056",
+      "3530164"
+    ],
+    "first_suspicious_txn_id": "3530164",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 49.0,
+    "evidence": [
+      {
+        "claim": "Base rate of fraud among investigated cases (intercept): -0.89 log-odds contribution",
+        "source": "model",
+        "ref": "calibration",
+        "entity_ids": [
+          "3530164"
+        ]
+      },
+      {
+        "claim": "5+ transactions on the card in the last 24h (8 txns): +0.88 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_card_velocity",
+        "entity_ids": [
+          "3530164"
+        ]
+      },
+      {
+        "claim": "2+ address/name match-flag failures: +1.61 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_identity_consistency",
+        "entity_ids": [
+          "3530164"
+        ]
+      },
+      {
+        "claim": "purchaser email domain never used by the customer before: +1.62 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_identity_consistency",
+        "entity_ids": [
+          "3530164"
+        ]
+      },
+      {
+        "claim": "the card's WCC component contains cards with confirmed fraud (component of 2 cards, 1 with fraud): +0.81 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_community",
+        "entity_ids": [
+          "3530164"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-0001",
+      "CC-0002",
+      "CC-0003",
+      "CC-0004",
+      "CC-0005"
+    ],
+    "summary": "CUSTOMER_REPORT on transaction 3530164 ($49.00, in_person) on card C08623-K2 of customer C08623 at 2016-12-10 13:01:21. The agent ran 11 graph queries against TigerGraph and assessed P(fraud) = 0.98 (80% CI 0.98-0.99) before additional evidence, most consistent with ACCOUNT_TAKEOVER. No additional evidence was needed: Stop and act: best decision PROTECT (expected loss PROTECT $2.01 vs RELEASE $1207.38); decision stability 100%; no evidence request has positive value of information. Final assessment P(fraud) = 0.98; decision PROTECT; actions: CREATE_CASE (auto), BLOCK_CARD (L1).",
+    "written_to_graph": true,
+    "graph_case_id": "CASE-2016-003"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "CREATE_CASE per R2; decision PROTECT at P(fraud)=0.98 (stability 100%)."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "BLOCK_CARD per R2; decision PROTECT at P(fraud)=0.98 (stability 100%)."
+      }
+    ],
+    "final": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "CREATE_CASE per R2; decision PROTECT at P(fraud)=0.98 (stability 100%)."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "BLOCK_CARD per R2; decision PROTECT at P(fraud)=0.98 (stability 100%)."
+      }
+    ],
+    "what_changed": "Graph evidence confirmed P(fraud) at 0.98; maintained decision PROTECT under policy guidelines."
+  },
+  "sar": {
+    "file": false,
+    "reason": "Confirmed fraud exposure is below $1,000 threshold and isolated without shared device links per Policy Section 3a.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0.0,
+    "activity_dates": []
+  },
+  "stop_reason": "Investigation concluded with verdict fraud (posterior P(fraud)=0.98, stability=100%). Policy criteria satisfied.",
+  "tool_calls": 11,
+  "tokens": 5200,
+  "latency_s": 0.42
+}

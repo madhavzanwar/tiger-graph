@@ -1,0 +1,18 @@
+CREATE OR REPLACE QUERY inv_community(VERTEX<Card> card) FOR GRAPH Verdict SYNTAX V1 {
+  /* Fraud-ring context from the card projection (SHARES_ENTITY) and precomputed WCC/Louvain labels. */
+  MaxAccum<INT> @@cid;
+  MaxAccum<INT> @@lid;
+  SumAccum<INT> @@n_comm;
+  SumAccum<INT> @@n_louv;
+  SetAccum<STRING> @@fraud_cards_comm;
+  SetAccum<STRING> @@sample;
+  S = {card};
+  S = SELECT s FROM S:s ACCUM @@cid += s.community_id, @@lid += s.louvain_id;
+  N = SELECT n FROM S:s -(SHARES_ENTITY:e)- Card:n;
+  ALLC = {Card.*};
+  CM = SELECT c FROM ALLC:c WHERE c.louvain_id == @@lid AND @@lid >= 0 ACCUM @@n_louv += 1;
+  CW = SELECT c FROM ALLC:c WHERE c.community_id == @@cid AND @@cid >= 0 ACCUM @@n_comm += 1, @@sample += c.card_id;
+  FC = SELECT c FROM CW:c -(rev_CASE_CARD:e)-> FraudCase:f WHERE f.outcome == "CONFIRMED_FRAUD" ACCUM @@fraud_cards_comm += c.card_id;
+  PRINT @@cid AS wcc_id, @@lid AS louvain_id, N.size() AS n_direct_links, @@n_comm AS wcc_size, @@n_louv AS louvain_size,
+        @@fraud_cards_comm.size() AS n_fraud_cards_in_component, N[N.card_id, N.customer_id] AS direct_links;
+}

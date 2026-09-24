@@ -1,0 +1,14 @@
+CREATE OR REPLACE QUERY rag_search_docs(LIST<FLOAT> qv, INT k = 5) FOR GRAPH Verdict {
+  /* GraphRAG: semantic retrieval over policy / pattern / regulation chunks (TigerVector). */
+  MapAccum<VERTEX, FLOAT> @@dist;
+  R = vectorSearch({DocChunk.emb}, qv, k, {DISTANCE_MAP: @@dist});
+  PRINT R[R.chunk_id, R.doc_type, R.section, R.ref_id, R.text] AS hits, @@dist AS distances;
+}
+CREATE OR REPLACE QUERY rag_search_cases(LIST<FLOAT> qv, INT k = 5) FOR GRAPH Verdict {
+  /* GraphRAG: semantic retrieval over case narratives, then graph expansion to each case's pattern and cards. */
+  MapAccum<VERTEX, FLOAT> @@dist;
+  SetAccum<STRING> @cards;
+  R = vectorSearch({FraudCase.emb}, qv, k, {DISTANCE_MAP: @@dist});
+  X = SELECT r FROM R:r -(CASE_CARD:e)-> Card:c ACCUM r.@cards += c.card_id;
+  PRINT R[R.case_id, R.outcome, R.pattern, R.actions_taken, R.evidence_requested, R.evidence_result, R.summary, R.@cards] AS hits, @@dist AS distances;
+}

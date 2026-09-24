@@ -1,0 +1,39 @@
+CREATE OR REPLACE QUERY inv_customer_baseline(VERTEX<Transaction> txn, INT lookback_days = 180) FOR GRAPH Verdict SYNTAX V1 {
+  /* Behavioural baseline of the customer and card before t0 (no look-ahead). */
+  MaxAccum<DATETIME> @@t0;
+  MaxAccum<DOUBLE> @@amt;
+  MaxAccum<STRING> @@card_id;
+  MaxAccum<INT> @@hr;
+  MaxAccum<BOOL> @@online;
+  SumAccum<INT> @@n;
+  SumAccum<DOUBLE> @@s;
+  SumAccum<DOUBLE> @@ss;
+  SumAccum<INT> @@n_online;
+  MapAccum<INT, SumAccum<INT>> @@hours;
+  MaxAccum<DATETIME> @@last_cust;
+  MaxAccum<DATETIME> @@last_card;
+  MaxAccum<DATETIME> @@last_card_hist;
+  SumAccum<INT> @@n_episode;
+  SumAccum<INT> @@n_card;
+  MaxAccum<DOUBLE> @@max_amt;
+  DATETIME lo;
+  DATETIME ep_lo;
+  S = {txn};
+  S = SELECT s FROM S:s ACCUM @@t0 += s.ts, @@amt += s.amount, @@card_id += s.card_id, @@hr += hour(s.ts), @@online += s.is_online;
+  lo = datetime_sub(@@t0, INTERVAL lookback_days DAY);
+  ep_lo = datetime_sub(@@t0, INTERVAL 6 HOUR);
+  CU = SELECT c FROM S:s -(rev_MADE:e)-> Customer:c;
+  P = SELECT t FROM CU:c -(MADE:e)-> Transaction:t
+      WHERE t.ts < @@t0 AND t.ts >= lo
+      ACCUM @@n += 1, @@s += t.amount, @@ss += t.amount * t.amount,
+            IF t.is_online THEN @@n_online += 1 END,
+            @@hours += (hour(t.ts) -> 1),
+            @@last_cust += t.ts, @@max_amt += t.amount,
+            IF t.card_id == @@card_id THEN
+              @@n_card += 1, @@last_card += t.ts,
+              IF t.ts < ep_lo THEN @@last_card_hist += t.ts ELSE @@n_episode += 1 END
+            END;
+  PRINT @@t0 AS t0, @@amt AS amount, @@hr AS hour, @@online AS is_online, @@n AS n_prior, @@s AS amt_sum, @@ss AS amt_sumsq,
+        @@n_online AS n_prior_online, @@hours AS hour_hist, @@last_cust AS last_customer_txn, @@last_card AS last_card_txn, @@last_card_hist AS last_card_txn_before_episode, @@n_episode AS card_txns_last_6h,
+        @@n_card AS n_prior_card, @@max_amt AS max_prior_amount, CU AS customer;
+}

@@ -1,0 +1,13 @@
+CREATE OR REPLACE QUERY mem_case_record(VERTEX<FraudCase> fcase) FOR GRAPH Verdict SYNTAX V1 {
+  /* Full case record for explanation and the UI: evidence, requests, actions, linked entities and similar cases. */
+  S = {fcase};
+  EV = SELECT v FROM S:s -(HAS_EVIDENCE:e)-> Evidence:v;
+  RQ = SELECT v FROM S:s -(HAS_REQUEST:e)-> EvidenceRequest:v;
+  AC = SELECT v FROM S:s -(HAS_ACTION:e)-> CaseAction:v;
+  TX = SELECT v FROM S:s -(CASE_TXN:e)-> Transaction:v;
+  CA = SELECT v FROM S:s -(CASE_CARD:e)-> Card:v;
+  PT = SELECT v FROM S:s -(CASE_PATTERN:e)-> Pattern:v;
+  SM = SELECT v FROM S:s -(SIMILAR_CASE:e)- FraudCase:v;
+  PRINT S AS fraud_case, EV AS evidence, RQ AS requests, AC AS actions, TX AS transactions, CA AS cards, PT AS patterns,
+        SM[SM.case_id, SM.outcome, SM.pattern] AS similar_cases;
+}

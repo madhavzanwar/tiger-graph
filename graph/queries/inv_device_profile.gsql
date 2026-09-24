@@ -1,0 +1,42 @@
+CREATE OR REPLACE QUERY inv_device_profile(VERTEX<Transaction> txn, INT window_days = 7) FOR GRAPH Verdict SYNTAX V1 {
+  /* Is the device new for this customer? Who else uses it? Is it tied to prior fraud? */
+  MaxAccum<DATETIME> @@t0;
+  MaxAccum<STRING> @@cust;
+  MaxAccum<STRING> @@card;
+  MaxAccum<BOOL> @@flag_new;
+  MaxAccum<BOOL> @@proxy;
+  SumAccum<INT> @@prior_same_cust;
+  SetAccum<STRING> @@other_customers;
+  SetAccum<STRING> @@cards;
+  SetAccum<STRING> @@recent_other_cards;
+  SetAccum<STRING> @@recent_other_susp_cards;
+  SetAccum<STRING> @@fraud_cases;
+  DATETIME lo;
+  DATETIME hi;
+  DATETIME hist_hi;
+  S = {txn};
+  S = SELECT s FROM S:s ACCUM @@t0 += s.ts, @@cust += s.customer_id, @@card += s.card_id, @@flag_new += s.device_new, @@proxy += s.is_proxy;
+  lo = datetime_sub(@@t0, INTERVAL window_days DAY);
+  hi = datetime_add(@@t0, INTERVAL window_days DAY);
+  hist_hi = datetime_sub(@@t0, INTERVAL 24 HOUR);
+  D = SELECT d FROM S:s -(USED_DEVICE:e)-> Device:d;
+  DT = SELECT t FROM D:d -(rev_USED_DEVICE:e)-> Transaction:t
+       WHERE t.ts <= hi AND t != txn
+       ACCUM
+         IF t.ts < hist_hi AND t.customer_id == @@cust THEN @@prior_same_cust += 1 END,
+         IF t.ts < @@t0 THEN
+           IF t.customer_id != @@cust THEN @@other_customers += t.customer_id END,
+           @@cards += t.card_id
+         END,
+         IF t.ts >= lo AND t.card_id != @@card THEN
+           @@recent_other_cards += t.card_id,
+           IF t.risk_score >= 0.5 OR t.device_new OR t.is_proxy THEN @@recent_other_susp_cards += t.card_id END
+         END;
+  FC = SELECT fc FROM DT:t -(rev_CASE_TXN:e)-> FraudCase:fc
+       WHERE fc.opened_at < @@t0 AND fc.outcome == "CONFIRMED_FRAUD"
+       ACCUM @@fraud_cases += fc.case_id;
+  PRINT D AS device, D.size() AS has_device, @@flag_new AS identity_new_device_flag, @@proxy AS is_proxy,
+        @@prior_same_cust AS prior_uses_by_customer, @@other_customers.size() AS n_other_customers, @@cards.size() AS n_cards_prior,
+        @@recent_other_cards.size() AS n_other_cards_window, @@recent_other_susp_cards AS other_suspicious_cards_window,
+        @@fraud_cases AS prior_fraud_cases_on_device;
+}

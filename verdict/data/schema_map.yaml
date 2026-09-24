@@ -1,0 +1,75 @@
+# Maps raw dataset files/columns -> VERDICT canonical fields.
+# When the official HHGOA_IEEE files arrive, only this file should need editing.
+files:
+  transactions: transactions.csv
+  identity: identity.csv
+  closed_cases: closed_cases_history.csv
+  case_pack: case_pack.csv
+  evidence_responses: evidence_responses.csv   # optional
+  docs:                                        # any that exist are ingested for GraphRAG
+    - {file: fraud_policy.md, doc_type: POLICY}
+    - {file: fraud_patterns.md, doc_type: PATTERN}
+    - {file: regulatory_references.md, doc_type: REGULATION}
+    - {file: README.md, doc_type: README}
+
+transactions:
+  txn_id: TransactionID
+  customer_id: customer_id
+  timestamp: ts                   # real data uses 'ts'; parsed with pandas
+  txn_dt: TransactionDT
+  base_date: "2016-07-01"         # real data starts from 2016
+  amount: TransactionAmt
+  product_cd: ProductCD
+  channel: channel
+  risk_score: risk_score
+  online_channel_values: [ONLINE, CNP, online, card_not_present, CARD_NOT_PRESENT]
+  card_id: null                   # set if the transaction file carries a card id
+  card_key_columns: [customer_id, card1, card2, card3, card5]
+  card_attr_columns: [card1, card2, card3, card4, card5, card6]
+  addr1: addr1
+  addr2: addr2
+  dist1: dist1
+  p_email: P_emaildomain
+  r_email: R_emaildomain
+  m_flags: [M1, M2, M3, M4, M5, M6, M7, M8, M9]
+
+identity:
+  txn_id: TransactionID
+  device_info: DeviceInfo
+  device_type: DeviceType
+  os: id_30
+  browser: id_31
+  screen: id_33
+  proxy: id_23                    # values like IP_PROXY:ANONYMOUS
+  new_device: id_15               # "New" means the device is new for this account
+  new_device_values: [New, NotFound]
+
+closed_cases:
+  case_id: case_id
+  opened_at: opened_at
+  closed_at: closed_at
+  trigger_type: trigger_type      # not in real data; prepare.py handles missing gracefully
+  card_id: card_id
+  customer_id: customer_id
+  trigger_txn_id: first_fraud_txn_id
+  involved_txn_ids: txn_ids
+  connected_card_ids: connected_card_ids
+  list_sep: "|"
+  outcome: outcome
+  fraud_outcome_values: [CONFIRMED_FRAUD, FRAUD, CONFIRMED, confirmed_fraud, "1", "True"]
+  pattern: pattern
+  evidence_requested: evidence_requested
+  evidence_result: evidence_result
+  actions_taken: actions_taken
+  sar_filed: report_filed
+  narrative: analyst_notes
+
+case_pack:
+  case_id: case_id
+  trigger_type: trigger_type
+  trigger_time: opened_at
+  card_id: card_id
+  customer_id: customer_id
+  trigger_txn_id: flagged_txn_id
+  risk_score: risk_score
+  detail: trigger_text

@@ -1,0 +1,8 @@
+CREATE OR REPLACE QUERY admin_clear_projection() FOR GRAPH Verdict SYNTAX V1 {
+  /* Removes the SHARES_ENTITY projection and resets community labels before a rebuild. Admin-only. */
+  S = {Card.*};
+  S = SELECT s FROM S:s -(SHARES_ENTITY:e)- Card:t ACCUM DELETE(e);
+  A = {Card.*};
+  A = SELECT a FROM A:a POST-ACCUM a.community_id = -1, a.louvain_id = -1;
+  PRINT "cleared";
+}

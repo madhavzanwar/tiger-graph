@@ -1,0 +1,146 @@
+{
+  "case_id": "HHG-017",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.97,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3450503",
+      "3450629"
+    ],
+    "first_suspicious_txn_id": "3450629",
+    "connected_card_ids": [
+      "C02354-K2",
+      "C07987-K2",
+      "C09933-K2"
+    ],
+    "connected_device_profiles": [
+      "device"
+    ],
+    "exposure_usd": 100.09,
+    "evidence": [
+      {
+        "claim": "Base rate of fraud among investigated cases (intercept): -0.89 log-odds contribution",
+        "source": "model",
+        "ref": "calibration",
+        "entity_ids": [
+          "3450629"
+        ]
+      },
+      {
+        "claim": "connection through an anonymous proxy: +2.30 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_device_profile",
+        "entity_ids": [
+          "3450629"
+        ]
+      },
+      {
+        "claim": "other cards used this device with suspicious activity in the same week: +0.65 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_device_profile",
+        "entity_ids": [
+          "3450629"
+        ]
+      },
+      {
+        "claim": "2+ other cards share a device/recipient email with high-risk activity (3 cards via device): +0.41 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_linked_entities",
+        "entity_ids": [
+          "3450629"
+        ]
+      },
+      {
+        "claim": "the card's WCC component contains cards with confirmed fraud (component of 2 cards, 1 with fraud): +0.81 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_community",
+        "entity_ids": [
+          "3450629"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-0001",
+      "CC-0002",
+      "CC-0003",
+      "CC-0004",
+      "CC-0005"
+    ],
+    "summary": "RISK_SCORE on transaction 3450629 ($100.09, online) on card C04570-K1 of customer C04570 at 2016-11-11 23:46:24. The agent ran 11 graph queries against TigerGraph and assessed P(fraud) = 0.97 (80% CI 0.96-0.97) before additional evidence, most consistent with CNP_NEW_DEVICE. No additional evidence was needed: Stop and act: best decision PROTECT (expected loss PROTECT $4.11 vs RELEASE $435.04); decision stability 100%; no evidence request has positive value of information. Final assessment P(fraud) = 0.97; decision PROTECT; actions: MONITOR_CONNECTED_CARDS (auto), CREATE_CASE (auto), BLOCK_CARD (L1), FILE_REPORT (L2).",
+    "written_to_graph": true,
+    "graph_case_id": "CASE-2016-017"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "MONITOR_CONNECTED_CARDS per R6; decision PROTECT at P(fraud)=0.97 (stability 100%)."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "CREATE_CASE per R6, R2; decision PROTECT at P(fraud)=0.97 (stability 100%)."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "BLOCK_CARD per R2; decision PROTECT at P(fraud)=0.97 (stability 100%)."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "FILE_REPORT per R6, R2; decision PROTECT at P(fraud)=0.97 (stability 100%)."
+      }
+    ],
+    "final": [
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "MONITOR_CONNECTED_CARDS per R6; decision PROTECT at P(fraud)=0.97 (stability 100%)."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "CREATE_CASE per R6, R2; decision PROTECT at P(fraud)=0.97 (stability 100%)."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "BLOCK_CARD per R2; decision PROTECT at P(fraud)=0.97 (stability 100%)."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "FILE_REPORT per R6, R2; decision PROTECT at P(fraud)=0.97 (stability 100%)."
+      }
+    ],
+    "what_changed": "Graph evidence confirmed P(fraud) at 0.97; maintained decision PROTECT under policy guidelines."
+  },
+  "sar": {
+    "file": true,
+    "reason": "Section 2 / Policy R2/R6: Confirmed unauthorized activity exceeding filing threshold or connecting multi-card syndicate",
+    "narrative": "Cardholder customer C04570 (card C04570-K1); unknown actor(s) using the card; linked cards C02354-K2, C09933-K2, C07987-K2. Suspected CNP_NEW_DEVICE fraud; P(fraud) 0.97. Trigger transaction at 2016-11-11 23:46:24. Channel online, billing region 204|87. connection through an anonymous proxy; the card's WCC component contains cards with confirmed fraud (component of 2 cards, 1 with fraud); other cards used this device with suspicious activity in the same week; 2+ other cards share a device/recipient email with high-risk activity (3 cards via device) Evidence gathered from the transaction graph (11 queries) and no customer contact.",
+    "subjects": [
+      "C04570",
+      "C04570-K1",
+      "C02354-K2",
+      "C07987-K2",
+      "C09933-K2",
+      "device"
+    ],
+    "total_amount_usd": 100.09,
+    "activity_dates": [
+      "2016-11-12",
+      "2016-11-12"
+    ]
+  },
+  "stop_reason": "Investigation concluded with verdict fraud (posterior P(fraud)=0.97, stability=100%). Policy criteria satisfied.",
+  "tool_calls": 11,
+  "tokens": 5200,
+  "latency_s": 0.42
+}

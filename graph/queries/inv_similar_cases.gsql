@@ -1,0 +1,31 @@
+CREATE OR REPLACE QUERY inv_similar_cases(VERTEX<Transaction> txn, INT k = 5, INT max_degree = 5000) FOR GRAPH Verdict SYNTAX V1 {
+  /* Structural precedent retrieval: closed cases whose transactions share entities (device, emails, region)
+     with the trigger. Each shared entity is weighted by inverse log-degree, so rare shared entities dominate. */
+  TYPEDEF TUPLE<STRING case_id, DOUBLE score, STRING outcome, STRING pattern, STRING shared, STRING summary> Hit;
+  HeapAccum<Hit>(k, score DESC) @@top;
+  MaxAccum<DATETIME> @@t0;
+  SumAccum<INT> @deg;
+  MaxAccum<DOUBLE> @w;
+  MapAccum<STRING, MaxAccum<DOUBLE>> @shared;
+  SumAccum<DOUBLE> @score;
+  SetAccum<STRING> @kinds;
+  MapAccum<STRING, MaxAccum<DOUBLE>> @tshared;
+  S = {txn};
+  S = SELECT s FROM S:s ACCUM @@t0 += s.ts;
+  E1 = SELECT d FROM S:s -(USED_DEVICE:e)-> Device:d;
+  E2 = SELECT m FROM S:s -((PURCHASER_EMAIL|RECIPIENT_EMAIL):e)-> EmailDomain:m;
+  E3 = SELECT r FROM S:s -(BILLED_IN:e)-> Region:r;
+  E = E1 UNION E2 UNION E3;
+  E = SELECT x FROM E:x -((rev_USED_DEVICE|rev_PURCHASER_EMAIL|rev_RECIPIENT_EMAIL|rev_BILLED_IN):e)-> Transaction:t ACCUM x.@deg += 1
+      POST-ACCUM x.@w = 1.0 / log(2.0 + x.@deg);
+  T = SELECT t FROM E:x -((rev_USED_DEVICE|rev_PURCHASER_EMAIL|rev_RECIPIENT_EMAIL|rev_BILLED_IN):e)-> Transaction:t
+      WHERE x.@deg <= max_degree AND t != txn AND t.ts < @@t0
+      ACCUM t.@tshared += (e.type -> x.@w);
+  F = SELECT f FROM T:t -(rev_CASE_TXN:e)-> FraudCase:f
+      WHERE f.opened_at < @@t0 AND f.source == "HISTORY"
+      ACCUM f.@shared += t.@tshared
+      POST-ACCUM
+        FOREACH (kk, vv) IN f.@shared DO f.@score += vv, f.@kinds += kk END,
+        @@top += Hit(f.case_id, f.@score, f.outcome, f.pattern, "", f.summary);
+  PRINT @@top AS similar_cases;
+}

@@ -1,0 +1,42 @@
+CREATE OR REPLACE QUERY inv_region_profile(VERTEX<Transaction> txn, INT window_h = 12, INT lookback_days = 180) FOR GRAPH Verdict SYNTAX V1 {
+  /* Region novelty for the customer, plus concurrent activity elsewhere (home) around t0. */
+  MaxAccum<DATETIME> @@t0;
+  MaxAccum<STRING> @@region;
+  MaxAccum<BOOL> @@online;
+  MaxAccum<DOUBLE> @@dist1;
+  SumAccum<INT> @@prior_in_region;
+  SumAccum<INT> @@prior_total;
+  MapAccum<STRING, SumAccum<INT>> @@region_hist;
+  SumAccum<INT> @@concurrent_elsewhere;
+  SumAccum<INT> @@concurrent_elsewhere_cp;
+  SumAccum<INT> @@concurrent_same_region;
+  SetAccum<STRING> @@concurrent_regions;
+  DATETIME lo;
+  DATETIME wlo;
+  DATETIME whi;
+  DATETIME hist_hi;
+  S = {txn};
+  S = SELECT s FROM S:s ACCUM @@t0 += s.ts, @@online += s.is_online, @@dist1 += s.dist1;
+  R = SELECT r FROM S:s -(BILLED_IN:e)-> Region:r ACCUM @@region += r.region_key;
+  lo = datetime_sub(@@t0, INTERVAL lookback_days DAY);
+  hist_hi = datetime_sub(@@t0, INTERVAL 24 HOUR);
+  wlo = datetime_sub(@@t0, INTERVAL window_h HOUR);
+  whi = datetime_add(@@t0, INTERVAL window_h HOUR);
+  CU = SELECT c FROM S:s -(rev_MADE:e)-> Customer:c;
+  P = SELECT t FROM CU:c -(MADE:e)-> Transaction:t WHERE t.ts >= lo AND t.ts <= whi AND t != txn;
+  PR = SELECT r FROM P:t -(BILLED_IN:e)-> Region:r
+       ACCUM
+         IF t.ts < hist_hi THEN
+           @@prior_total += 1, @@region_hist += (r.region_key -> 1),
+           IF r.region_key == @@region THEN @@prior_in_region += 1 END
+         END,
+         IF t.ts >= wlo AND t.ts <= whi THEN
+           IF r.region_key != @@region THEN
+             @@concurrent_elsewhere += 1, @@concurrent_regions += r.region_key,
+             IF NOT t.is_online THEN @@concurrent_elsewhere_cp += 1 END
+           ELSE @@concurrent_same_region += 1 END
+         END;
+  PRINT @@region AS region, @@online AS is_online, @@dist1 AS dist1, @@prior_in_region AS prior_txns_in_region, @@prior_total AS prior_txns_total,
+        @@region_hist AS region_hist, @@concurrent_elsewhere AS concurrent_txns_elsewhere, @@concurrent_elsewhere_cp AS concurrent_card_present_elsewhere,
+        @@concurrent_same_region AS concurrent_txns_same_region, @@concurrent_regions AS concurrent_regions;
+}

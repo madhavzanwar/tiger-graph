@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "cd ui && npm ci --no-audit --no-fund",
+  "buildCommand": "cd ui && VITE_REPLAY=1 npx vite build",
+  "outputDirectory": "ui/dist",
+  "rewrites": [{ "source": "/((?!demo/|assets/).*)", "destination": "/index.html" }]
+}

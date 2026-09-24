@@ -1,0 +1,30 @@
+CREATE OR REPLACE QUERY inv_exposure(VERTEX<Transaction> txn, INT window_h = 48) FOR GRAPH Verdict SYNTAX V1 {
+  /* Money at risk and signs of a wider compromise across the customer's other cards. */
+  MaxAccum<DATETIME> @@t0;
+  MaxAccum<STRING> @@card;
+  MaxAccum<DOUBLE> @@amt;
+  SumAccum<DOUBLE> @@card_amt_24h;
+  SumAccum<INT> @@card_n_24h;
+  SetAccum<STRING> @@other_cards;
+  SetAccum<STRING> @@other_cards_suspicious;
+  SumAccum<DOUBLE> @@other_cards_amt;
+  DATETIME lo24;
+  DATETIME wlo;
+  DATETIME whi;
+  S = {txn};
+  S = SELECT s FROM S:s ACCUM @@t0 += s.ts, @@card += s.card_id, @@amt += s.amount;
+  lo24 = datetime_sub(@@t0, INTERVAL 24 HOUR);
+  wlo = datetime_sub(@@t0, INTERVAL window_h HOUR);
+  whi = datetime_add(@@t0, INTERVAL 6 HOUR);
+  CU = SELECT c FROM S:s -(rev_MADE:e)-> Customer:c;
+  AC = SELECT k FROM CU:c -(HAS_CARD:e)-> Card:k ACCUM IF k.card_id != @@card THEN @@other_cards += k.card_id END;
+  T = SELECT t FROM CU:c -(MADE:e)-> Transaction:t
+      WHERE t.ts >= wlo AND t.ts <= whi
+      ACCUM
+        IF t.card_id == @@card AND t.ts >= lo24 AND t.ts <= @@t0 THEN @@card_amt_24h += t.amount, @@card_n_24h += 1 END,
+        IF t.card_id != @@card AND (t.risk_score >= 0.5 OR t.device_new OR t.m_fail >= 2) THEN
+          @@other_cards_suspicious += t.card_id, @@other_cards_amt += t.amount
+        END;
+  PRINT @@amt AS trigger_amount, @@card_amt_24h AS card_amount_24h, @@card_n_24h AS card_txns_24h, @@other_cards.size() AS n_other_cards,
+        @@other_cards_suspicious AS other_cards_with_suspicious_activity, @@other_cards_amt AS other_cards_suspicious_amount;
+}

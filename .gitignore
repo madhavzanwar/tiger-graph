@@ -1,0 +1,16 @@
+data/*
+!data/sample/
+.env
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+ui/dist/
+artifacts/
+docker/*.so
+*.egg-info/
+.sandbox-ca.crt
+repos/
+.DS_Store
+*.log
+.vercel

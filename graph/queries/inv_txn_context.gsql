@@ -1,0 +1,11 @@
+CREATE OR REPLACE QUERY inv_txn_context(VERTEX<Transaction> txn) FOR GRAPH Verdict SYNTAX V1 {
+  /* One-hop profile of the trigger transaction: card, customer, device, emails, region. */
+  S = {txn};
+  C = SELECT t FROM S:s -(PAID_WITH:e)-> Card:t;
+  D = SELECT t FROM S:s -(USED_DEVICE:e)-> Device:t;
+  PE = SELECT t FROM S:s -(PURCHASER_EMAIL:e)-> EmailDomain:t;
+  RE = SELECT t FROM S:s -(RECIPIENT_EMAIL:e)-> EmailDomain:t;
+  R = SELECT t FROM S:s -(BILLED_IN:e)-> Region:t;
+  CU = SELECT t FROM S:s -(rev_MADE:e)-> Customer:t;
+  PRINT S AS txn, C AS card, CU AS customer, D AS device, PE AS purchaser_email, RE AS recipient_email, R AS region;
+}

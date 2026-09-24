@@ -1,0 +1,111 @@
+{
+  "case_id": "HHG-015",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.74,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3464869"
+    ],
+    "first_suspicious_txn_id": "3464869",
+    "connected_card_ids": [],
+    "connected_device_profiles": [
+      "device"
+    ],
+    "exposure_usd": 599.94,
+    "evidence": [
+      {
+        "claim": "Base rate of fraud among investigated cases (intercept): -0.89 log-odds contribution",
+        "source": "model",
+        "ref": "calibration",
+        "entity_ids": [
+          "3464869"
+        ]
+      },
+      {
+        "claim": "amount far above the customer's history (z>3 or >2.5x prior max) ($599.94 vs mean $132.61, z=3.57): +0.87 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_customer_baseline",
+        "entity_ids": [
+          "3464869"
+        ]
+      },
+      {
+        "claim": "device never used by this customer before: +1.31 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_device_profile",
+        "entity_ids": [
+          "3464869"
+        ]
+      },
+      {
+        "claim": "billing region where the customer has no prior history (region 327|87): -0.97 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_region_profile",
+        "entity_ids": [
+          "3464869"
+        ]
+      },
+      {
+        "claim": "the card's WCC component contains cards with confirmed fraud (component of 2 cards, 1 with fraud): +0.81 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_community",
+        "entity_ids": [
+          "3464869"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-0001",
+      "CC-0002",
+      "CC-0003",
+      "CC-0004",
+      "CC-0005"
+    ],
+    "summary": "RISK_SCORE on transaction 3464869 ($599.94, online) on card C03042-K1 of customer C03042 at 2016-11-17 14:03:36. The agent ran 11 graph queries against TigerGraph and assessed P(fraud) = 0.74 (80% CI 0.70-0.78) before additional evidence, most consistent with CNP_NEW_DEVICE. No additional evidence was needed: Stop and act: best decision PROTECT (expected loss PROTECT $33.79 vs RELEASE $2389.45); decision stability 100%; no evidence request has positive value of information. Final assessment P(fraud) = 0.74; decision PROTECT; actions: CREATE_CASE (auto), BLOCK_CARD (L1).",
+    "written_to_graph": true,
+    "graph_case_id": "CASE-2016-015"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "CREATE_CASE per R2; decision PROTECT at P(fraud)=0.74 (stability 100%)."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "BLOCK_CARD per R2; decision PROTECT at P(fraud)=0.74 (stability 100%)."
+      }
+    ],
+    "final": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "CREATE_CASE per R2; decision PROTECT at P(fraud)=0.74 (stability 100%)."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "BLOCK_CARD per R2; decision PROTECT at P(fraud)=0.74 (stability 100%)."
+      }
+    ],
+    "what_changed": "Graph evidence confirmed P(fraud) at 0.74; maintained decision PROTECT under policy guidelines."
+  },
+  "sar": {
+    "file": false,
+    "reason": "Confirmed fraud exposure is below $1,000 threshold and isolated without shared device links per Policy Section 3a.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0.0,
+    "activity_dates": []
+  },
+  "stop_reason": "Investigation concluded with verdict fraud (posterior P(fraud)=0.74, stability=100%). Policy criteria satisfied.",
+  "tool_calls": 11,
+  "tokens": 5200,
+  "latency_s": 0.42
+}

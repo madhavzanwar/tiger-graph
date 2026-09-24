@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "verdict"
+version = "0.1.0"
+description = "VERDICT - agentic fraud investigation on TigerGraph (HHGOA 2026)"
+requires-python = ">=3.10"
+dependencies = [
+  "pyTigerGraph>=2.0.4",
+  "tigergraph-mcp==1.0.3",
+  "mcp>=1.0",
+  "anthropic>=1.0",
+  "fastapi",
+  "uvicorn[standard]",
+  "sse-starlette",
+  "pandas",
+  "numpy",
+  "scikit-learn",
+  "pyyaml",
+  "pydantic>=2",
+  "python-dotenv",
+  "httpx",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+fastembed = ["fastembed"]
+
+[project.scripts]
+verdict = "verdict.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["verdict*"]
+
+[tool.setuptools.package-data]
+verdict = ["**/*.yaml", "**/*.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

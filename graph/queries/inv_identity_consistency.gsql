@@ -1,0 +1,37 @@
+CREATE OR REPLACE QUERY inv_identity_consistency(VERTEX<Transaction> txn, INT lookback_days = 180, INT window_h = 48) FOR GRAPH Verdict SYNTAX V1 {
+  /* Account-takeover indicators: match-flag failures, email-domain change, mixed channels, device churn. */
+  MaxAccum<DATETIME> @@t0;
+  MaxAccum<INT> @@m_fail;
+  MaxAccum<STRING> @@m_flags;
+  MaxAccum<STRING> @@p_email;
+  MapAccum<STRING, SumAccum<INT>> @@prior_emails;
+  SumAccum<INT> @@win_online;
+  SumAccum<INT> @@win_cp;
+  SumAccum<INT> @@win_new_device;
+  SumAccum<INT> @@win_m_fail;
+  SumAccum<INT> @@win_n;
+  SetAccum<STRING> @@win_cards;
+  DATETIME lo;
+  DATETIME wlo;
+  DATETIME whi;
+  S = {txn};
+  S = SELECT s FROM S:s ACCUM @@t0 += s.ts, @@m_fail += s.m_fail, @@m_flags += s.m_flags;
+  PE = SELECT e FROM S:s -(PURCHASER_EMAIL:x)-> EmailDomain:e ACCUM @@p_email += e.domain;
+  lo = datetime_sub(@@t0, INTERVAL lookback_days DAY);
+  wlo = datetime_sub(@@t0, INTERVAL window_h HOUR);
+  whi = datetime_add(@@t0, INTERVAL 6 HOUR);
+  CU = SELECT c FROM S:s -(rev_MADE:e)-> Customer:c;
+  P = SELECT t FROM CU:c -(MADE:e)-> Transaction:t
+      WHERE t.ts >= lo AND t.ts <= whi
+      ACCUM IF t.ts >= wlo THEN
+              @@win_n += 1, @@win_cards += t.card_id, @@win_m_fail += t.m_fail,
+              IF t.is_online THEN @@win_online += 1 ELSE @@win_cp += 1 END,
+              IF t.device_new THEN @@win_new_device += 1 END
+            END;
+  PP = SELECT e FROM P:t -(PURCHASER_EMAIL:x)-> EmailDomain:e
+       WHERE t.ts < wlo
+       ACCUM @@prior_emails += (e.domain -> 1);
+  PRINT @@m_fail AS m_fail, @@m_flags AS m_flags, @@p_email AS purchaser_email, @@prior_emails AS prior_purchaser_emails,
+        @@win_n AS window_txns, @@win_online AS window_online, @@win_cp AS window_card_present, @@win_new_device AS window_new_device_txns,
+        @@win_m_fail AS window_match_failures, @@win_cards.size() AS window_cards;
+}

@@ -1,0 +1,40 @@
+CREATE OR REPLACE QUERY inv_card_velocity(VERTEX<Card> card, DATETIME t0, INT window_min = 60, DOUBLE small_amt = 10.0, DOUBLE large_amt = 50.0) FOR GRAPH Verdict SYNTAX V1 {
+  /* Card-testing signature: small online authorisations inside the window before t0, then larger purchases. */
+  TYPEDEF TUPLE<STRING txn_id, DATETIME ts, DOUBLE amount, BOOL is_online, BOOL device_new, BOOL is_proxy, DOUBLE risk_score> Row;
+  HeapAccum<Row>(60, ts ASC) @@window_txns;
+  SumAccum<INT> @@n_small;
+  SumAccum<DOUBLE> @@small_sum;
+  MinAccum<DATETIME> @@first_small;
+  SumAccum<INT> @@n_large_after;
+  MaxAccum<DOUBLE> @@max_large_after;
+  MaxAccum<DOUBLE> @@max_cleared_large;
+  SumAccum<INT> @@n_24h;
+  SumAccum<DOUBLE> @@amt_24h;
+  SetAccum<STRING> @@devices;
+  DATETIME lo;
+  DATETIME hi;
+  DATETIME day_lo;
+  lo = datetime_sub(t0, INTERVAL window_min MINUTE);
+  hi = datetime_add(t0, INTERVAL 30 MINUTE);
+  day_lo = datetime_sub(t0, INTERVAL 24 HOUR);
+  S = {card};
+  T = SELECT t FROM S:s -(rev_PAID_WITH:e)-> Transaction:t
+      WHERE t.ts >= day_lo AND t.ts <= hi
+      ACCUM
+        IF t.ts <= t0 THEN @@n_24h += 1, @@amt_24h += t.amount END,
+        IF t.ts >= lo THEN
+          @@window_txns += Row(t.txn_id, t.ts, t.amount, t.is_online, t.device_new, t.is_proxy, t.risk_score),
+          IF t.amount < small_amt AND t.is_online AND t.ts <= t0 THEN
+            @@n_small += 1, @@small_sum += t.amount, @@first_small += t.ts
+          END
+        END;
+  W = SELECT t FROM T:t
+      WHERE @@n_small > 0 AND t.ts > @@first_small AND t.amount >= large_amt
+      ACCUM @@n_large_after += 1, @@max_large_after += t.amount,
+            IF t.ts <= t0 AND t.amount > 100 THEN @@max_cleared_large += t.amount END;
+  WT = SELECT t FROM T:t WHERE t.ts >= lo;
+  DV = SELECT d FROM WT:t -(USED_DEVICE:e)-> Device:d ACCUM @@devices += d.device_key;
+  PRINT @@n_small AS n_small_auths, @@small_sum AS small_sum, @@n_large_after AS n_large_after_small,
+        @@max_large_after AS max_large_after_small, @@max_cleared_large AS max_cleared_over_100,
+        @@n_24h AS n_txn_24h, @@amt_24h AS amt_24h, @@devices.size() AS n_devices_window, @@window_txns AS window_txns;
+}

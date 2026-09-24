@@ -1,0 +1,41 @@
+// VERDICT graph schema (TigerGraph 4.2+)
+USE GLOBAL
+CREATE VERTEX Customer (PRIMARY_ID customer_id STRING, home_region STRING, first_seen DATETIME, n_txn INT, amt_mean DOUBLE, amt_std DOUBLE, amt_p95 DOUBLE, online_ratio DOUBLE, community_id INT DEFAULT -1) WITH primary_id_as_attribute="true"
+CREATE VERTEX Card (PRIMARY_ID card_id STRING, customer_id STRING, card1 STRING, card2 STRING, card3 STRING, card4 STRING, card5 STRING, card6 STRING, community_id INT DEFAULT -1, pagerank DOUBLE DEFAULT 0, louvain_id INT DEFAULT -1) WITH primary_id_as_attribute="true"
+CREATE VERTEX Transaction (PRIMARY_ID txn_id STRING, ts DATETIME, amount DOUBLE, product_cd STRING, channel STRING, is_online BOOL, risk_score DOUBLE, dist1 DOUBLE, m_flags STRING, m_fail INT, is_proxy BOOL, device_new BOOL, customer_id STRING, card_id STRING) WITH primary_id_as_attribute="true"
+CREATE VERTEX Device (PRIMARY_ID device_key STRING, device_type STRING, device_info STRING, os STRING, browser STRING, screen STRING, community_id INT DEFAULT -1, pagerank DOUBLE DEFAULT 0) WITH primary_id_as_attribute="true"
+CREATE VERTEX EmailDomain (PRIMARY_ID domain STRING) WITH primary_id_as_attribute="true"
+CREATE VERTEX Region (PRIMARY_ID region_key STRING) WITH primary_id_as_attribute="true"
+
+CREATE VERTEX FraudCase (PRIMARY_ID case_id STRING, source STRING, trigger_type STRING, status STRING, opened_at DATETIME, closed_at DATETIME, outcome STRING, pattern STRING, evidence_requested STRING, evidence_result STRING, actions_taken STRING, sar_filed STRING, p_fraud DOUBLE DEFAULT -1, ci_low DOUBLE DEFAULT -1, ci_high DOUBLE DEFAULT -1, stability DOUBLE DEFAULT -1, summary STRING, updated_at DATETIME) WITH primary_id_as_attribute="true"
+CREATE VERTEX Evidence (PRIMARY_ID evidence_id STRING, kind STRING, label STRING, value STRING, llr DOUBLE, source_tool STRING, ts DATETIME) WITH primary_id_as_attribute="true"
+CREATE VERTEX EvidenceRequest (PRIMARY_ID request_id STRING, kind STRING, status STRING, reason STRING, response STRING, requested_at DATETIME, answered_at DATETIME) WITH primary_id_as_attribute="true"
+CREATE VERTEX CaseAction (PRIMARY_ID action_id STRING, code STRING, phase STRING, status STRING, approval_route STRING, rationale STRING, policy_refs STRING, ts DATETIME) WITH primary_id_as_attribute="true"
+CREATE VERTEX Pattern (PRIMARY_ID pattern_id STRING, name STRING, status STRING, description STRING, signature STRING, n_cases INT DEFAULT 0) WITH primary_id_as_attribute="true"
+CREATE VERTEX DocChunk (PRIMARY_ID chunk_id STRING, doc_type STRING, section STRING, text STRING, ref_id STRING) WITH primary_id_as_attribute="true"
+CREATE VERTEX FeatureStat (PRIMARY_ID feature_key STRING, n_fraud_pos INT, n_fraud INT, n_clear_pos INT, n_clear INT, updated_at DATETIME) WITH primary_id_as_attribute="true"
+
+CREATE DIRECTED EDGE HAS_CARD (FROM Customer, TO Card) WITH REVERSE_EDGE="rev_HAS_CARD"
+CREATE DIRECTED EDGE MADE (FROM Customer, TO Transaction) WITH REVERSE_EDGE="rev_MADE"
+CREATE DIRECTED EDGE PAID_WITH (FROM Transaction, TO Card) WITH REVERSE_EDGE="rev_PAID_WITH"
+CREATE DIRECTED EDGE USED_DEVICE (FROM Transaction, TO Device) WITH REVERSE_EDGE="rev_USED_DEVICE"
+CREATE DIRECTED EDGE PURCHASER_EMAIL (FROM Transaction, TO EmailDomain) WITH REVERSE_EDGE="rev_PURCHASER_EMAIL"
+CREATE DIRECTED EDGE RECIPIENT_EMAIL (FROM Transaction, TO EmailDomain) WITH REVERSE_EDGE="rev_RECIPIENT_EMAIL"
+CREATE DIRECTED EDGE BILLED_IN (FROM Transaction, TO Region) WITH REVERSE_EDGE="rev_BILLED_IN"
+CREATE DIRECTED EDGE HOME_REGION (FROM Customer, TO Region) WITH REVERSE_EDGE="rev_HOME_REGION"
+
+CREATE DIRECTED EDGE CASE_TXN (FROM FraudCase, TO Transaction, role STRING) WITH REVERSE_EDGE="rev_CASE_TXN"
+CREATE DIRECTED EDGE CASE_CARD (FROM FraudCase, TO Card, role STRING) WITH REVERSE_EDGE="rev_CASE_CARD"
+CREATE DIRECTED EDGE CASE_CUSTOMER (FROM FraudCase, TO Customer) WITH REVERSE_EDGE="rev_CASE_CUSTOMER"
+CREATE DIRECTED EDGE CASE_PATTERN (FROM FraudCase, TO Pattern, score DOUBLE) WITH REVERSE_EDGE="rev_CASE_PATTERN"
+CREATE UNDIRECTED EDGE SIMILAR_CASE (FROM FraudCase, TO FraudCase, score DOUBLE, basis STRING)
+CREATE DIRECTED EDGE HAS_EVIDENCE (FROM FraudCase, TO Evidence) WITH REVERSE_EDGE="rev_HAS_EVIDENCE"
+CREATE DIRECTED EDGE HAS_REQUEST (FROM FraudCase, TO EvidenceRequest) WITH REVERSE_EDGE="rev_HAS_REQUEST"
+CREATE DIRECTED EDGE HAS_ACTION (FROM FraudCase, TO CaseAction) WITH REVERSE_EDGE="rev_HAS_ACTION"
+CREATE DIRECTED EDGE CITES (FROM CaseAction, TO DocChunk) WITH REVERSE_EDGE="rev_CITES"
+CREATE DIRECTED EDGE DESCRIBES (FROM DocChunk, TO FraudCase) WITH REVERSE_EDGE="rev_DESCRIBES"
+CREATE DIRECTED EDGE CHUNK_PATTERN (FROM DocChunk, TO Pattern) WITH REVERSE_EDGE="rev_CHUNK_PATTERN"
+
+CREATE UNDIRECTED EDGE SHARES_ENTITY (FROM Card, TO Card, weight DOUBLE, via STRING)
+
+CREATE GRAPH Verdict (*)

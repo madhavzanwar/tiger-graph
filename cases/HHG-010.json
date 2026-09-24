@@ -1,0 +1,128 @@
+{
+  "case_id": "HHG-010",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.88,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3506725"
+    ],
+    "first_suspicious_txn_id": "3506725",
+    "connected_card_ids": [],
+    "connected_device_profiles": [
+      "device"
+    ],
+    "exposure_usd": 1000.03,
+    "evidence": [
+      {
+        "claim": "Base rate of fraud among investigated cases (intercept): -0.89 log-odds contribution",
+        "source": "model",
+        "ref": "calibration",
+        "entity_ids": [
+          "3506725"
+        ]
+      },
+      {
+        "claim": "Bank model risk score 0.90: -0.39 log-odds contribution",
+        "source": "model",
+        "ref": "transaction.risk_score",
+        "entity_ids": [
+          "3506725"
+        ]
+      },
+      {
+        "claim": "amount far above the customer's history (z>3 or >2.5x prior max) ($1000.03 vs mean $131.25, z=4.97): +0.87 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_customer_baseline",
+        "entity_ids": [
+          "3506725"
+        ]
+      },
+      {
+        "claim": "device never used by this customer before: +1.31 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_device_profile",
+        "entity_ids": [
+          "3506725"
+        ]
+      },
+      {
+        "claim": "the card's WCC component contains cards with confirmed fraud (component of 2 cards, 1 with fraud): +0.81 log-odds contribution",
+        "source": "graph",
+        "ref": "inv_community",
+        "entity_ids": [
+          "3506725"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-0001",
+      "CC-0002",
+      "CC-0003",
+      "CC-0004",
+      "CC-0005"
+    ],
+    "summary": "RISK_SCORE on transaction 3506725 ($1000.03, online) on card C10434-K1 of customer C10434 at 2016-12-02 15:18:27. The agent ran 11 graph queries against TigerGraph and assessed P(fraud) = 0.88 (80% CI 0.85-0.90) before additional evidence, most consistent with CNP_NEW_DEVICE. No additional evidence was needed: Stop and act: best decision PROTECT (expected loss PROTECT $17.01 vs RELEASE $1317.76); decision stability 100%; no evidence request has positive value of information. Final assessment P(fraud) = 0.88; decision PROTECT; actions: CREATE_CASE (auto), BLOCK_CARD (L1), FILE_REPORT (L2).",
+    "written_to_graph": true,
+    "graph_case_id": "CASE-2016-010"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "CREATE_CASE per R2; decision PROTECT at P(fraud)=0.88 (stability 100%)."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "BLOCK_CARD per R2; decision PROTECT at P(fraud)=0.88 (stability 100%)."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "FILE_REPORT per R2; decision PROTECT at P(fraud)=0.88 (stability 100%)."
+      }
+    ],
+    "final": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "CREATE_CASE per R2; decision PROTECT at P(fraud)=0.88 (stability 100%)."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "BLOCK_CARD per R2; decision PROTECT at P(fraud)=0.88 (stability 100%)."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "FILE_REPORT per R2; decision PROTECT at P(fraud)=0.88 (stability 100%)."
+      }
+    ],
+    "what_changed": "Graph evidence confirmed P(fraud) at 0.88; maintained decision PROTECT under policy guidelines."
+  },
+  "sar": {
+    "file": true,
+    "reason": "Section 2 / Policy R2/R6: Confirmed unauthorized activity exceeding filing threshold or connecting multi-card syndicate",
+    "narrative": "Cardholder customer C10434 (card C10434-K1); unknown actor(s) using the card. Suspected CNP_NEW_DEVICE fraud; P(fraud) 0.88. Trigger transaction at 2016-12-02 15:18:27. Channel online, billing region 469|87. device never used by this customer before; amount far above the customer's history (z>3 or >2.5x prior max) ($1000.03 vs mean $131.25, z=4.97); the card's WCC component contains cards with confirmed fraud (component of 2 cards, 1 with fraud); device previously used by 2+ other customers Evidence gathered from the transaction graph (11 queries) and no customer contact.",
+    "subjects": [
+      "C10434",
+      "C10434-K1",
+      "device"
+    ],
+    "total_amount_usd": 1000.03,
+    "activity_dates": [
+      "2016-12-02",
+      "2016-12-02"
+    ]
+  },
+  "stop_reason": "Investigation concluded with verdict fraud (posterior P(fraud)=0.88, stability=100%). Policy criteria satisfied.",
+  "tool_calls": 11,
+  "tokens": 5200,
+  "latency_s": 0.42
+}

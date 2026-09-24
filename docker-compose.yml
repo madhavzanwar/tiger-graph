@@ -1,0 +1,29 @@
+# One-command demo:  docker compose up -d   (first time: docker compose run --rm verdict verdict bootstrap --init)
+services:
+  tigergraph:
+    image: tigergraph/community:4.2.5
+    container_name: verdict-tigergraph
+    ports: ["14240:14240"]
+    ulimits:
+      nofile: {soft: 1000000, hard: 1000000}
+    volumes: ["tg-data:/home/tigergraph/tigergraph/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf -u tigergraph:tigergraph http://localhost:14240/api/ping || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 30
+  verdict:
+    build: .
+    container_name: verdict-app
+    env_file: [.env]
+    environment:
+      TG_HOST: http://tigergraph
+    depends_on:
+      tigergraph: {condition: service_healthy}
+    ports: ["8000:8000"]
+    volumes:
+      - ./data:/app/data
+      - ./artifacts:/app/artifacts
+      - ./outputs:/app/outputs
+volumes:
+  tg-data:

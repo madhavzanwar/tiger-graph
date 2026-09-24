@@ -1,0 +1,1411 @@
+{
+  "case_id": "HHG-020",
+  "schema_version": "verdict-answer/1.0",
+  "generated_at": "2026-09-23T09:58:21Z",
+  "agent": {
+    "name": "VERDICT",
+    "version": "0.1.0",
+    "llm": {
+      "enabled": false,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "calls": 0
+      }
+    },
+    "graph_access": "mcp"
+  },
+  "trigger": {
+    "case_id": "HHG-020",
+    "trigger_type": "RISK_SIGNAL",
+    "trigger_time": "2026-05-22 03:11:00",
+    "card_id": "CARD-000024",
+    "customer_id": "CUST-100019",
+    "trigger_txn_id": "3061175",
+    "risk_score": "0.7861",
+    "detail": "Model alert: risk score 0.79 on transaction 3061175."
+  },
+  "case": {
+    "status": "PENDING_APPROVAL",
+    "fraud_pattern": {
+      "label": "OUT_OF_REGION",
+      "display": "LIKELY_LEGITIMATE (ruled out OUT_OF_REGION)",
+      "probability": 0.975,
+      "undocumented": false,
+      "hypothesis": null,
+      "alternatives": [
+        {
+          "pattern": "OUT_OF_REGION",
+          "prob": 0.975
+        },
+        {
+          "pattern": "CNP_NEW_DEVICE",
+          "prob": 0.009
+        },
+        {
+          "pattern": "UNCLASSIFIED",
+          "prob": 0.006
+        },
+        {
+          "pattern": "SHARED_ENTITY_RING",
+          "prob": 0.005
+        }
+      ],
+      "documented_signature_match": {
+        "CARD_TESTING": 0.0,
+        "CNP_NEW_DEVICE": 0.0,
+        "OUT_OF_REGION": 0.5,
+        "ACCOUNT_TAKEOVER": 0.0,
+        "SHARED_ENTITY_RING": 0.0
+      }
+    },
+    "risk_assessment": {
+      "p_fraud_before_evidence": 0.0853,
+      "ci80_before": [
+        0.0493,
+        0.1586
+      ],
+      "p_fraud_after_evidence": 0.0058,
+      "ci80_after": [
+        0.0033,
+        0.0117
+      ],
+      "risk_level": "MINIMAL",
+      "decision_stability": 1.0
+    },
+    "investigation_record": {
+      "graph_queries": [
+        {
+          "tool": "inv_txn_context",
+          "args": {
+            "txn": "3061175"
+          },
+          "via": "mcp",
+          "ms": 12.8,
+          "ok": true
+        },
+        {
+          "tool": "inv_card_velocity",
+          "args": {
+            "card": "CARD-000024",
+            "t0": "2026-05-22 06:11:00",
+            "window_min": 60
+          },
+          "via": "mcp",
+          "ms": 10.9,
+          "ok": true
+        },
+        {
+          "tool": "inv_customer_baseline",
+          "args": {
+            "txn": "3061175"
+          },
+          "via": "mcp",
+          "ms": 10.5,
+          "ok": true
+        },
+        {
+          "tool": "inv_device_profile",
+          "args": {
+            "txn": "3061175"
+          },
+          "via": "mcp",
+          "ms": 10.2,
+          "ok": true
+        },
+        {
+          "tool": "inv_region_profile",
+          "args": {
+            "txn": "3061175"
+          },
+          "via": "mcp",
+          "ms": 13.0,
+          "ok": true
+        },
+        {
+          "tool": "inv_identity_consistency",
+          "args": {
+            "txn": "3061175"
+          },
+          "via": "mcp",
+          "ms": 10.7,
+          "ok": true
+        },
+        {
+          "tool": "inv_linked_entities",
+          "args": {
+            "txn": "3061175"
+          },
+          "via": "mcp",
+          "ms": 16.4,
+          "ok": true
+        },
+        {
+          "tool": "inv_prior_cases",
+          "args": {
+            "txn": "3061175"
+          },
+          "via": "mcp",
+          "ms": 12.9,
+          "ok": true
+        },
+        {
+          "tool": "inv_similar_cases",
+          "args": {
+            "txn": "3061175",
+            "k": 8
+          },
+          "via": "mcp",
+          "ms": 15.7,
+          "ok": true
+        },
+        {
+          "tool": "inv_community",
+          "args": {
+            "card": "CARD-000024"
+          },
+          "via": "mcp",
+          "ms": 13.2,
+          "ok": true
+        },
+        {
+          "tool": "inv_exposure",
+          "args": {
+            "txn": "3061175"
+          },
+          "via": "mcp",
+          "ms": 9.4,
+          "ok": true
+        },
+        {
+          "tool": "rag_search_docs",
+          "args": {
+            "qv": [
+              0.40986,
+              0.0416,
+              0.32868,
+              0.22767,
+              0.16126,
+              0.08686,
+              -0.12302,
+              0.12344,
+              0.10835,
+              -0.02556,
+              0.06202,
+              0.02496,
+              0.16546,
+              0.04006,
+              0.1066,
+              0.57429,
+              -0.04224,
+              -0.10335,
+              0.09362,
+              -0.07281,
+              -0.06932,
+              0.06582,
+              0.02259,
+              -0.00768,
+              -0.00396,
+              0.0294,
+              -0.02375,
+              0.00221,
+              -0.00795,
+              -0.09195,
+              -0.01318,
+              -0.03556,
+              0.00912,
+              0.0323,
+              -0.02575,
+              0.05476,
+              -0.05408,
+              0.02603,
+              -0.02231,
+              0.02264,
+              0.0605,
+              0.03195,
+              0.03103,
+              -0.03334,
+              -0.0014,
+              0.11261,
+              0.00614,
+              -0.00468,
+              -0.00481,
+              -0.02232,
+              0.00469,
+              -0.04109,
+              -0.00456,
+              0.02061,
+              -0.00357,
+              -0.00741,
+              0.05371,
+              -0.00157,
+              0.01688,
+              -0.00535,
+              0.03007,
+              -0.00097,
+              -0.04992,
+              -0.00441,
+              -0.01449,
+              -0.01657,
+              -0.04096,
+              -0.01912,
+              -0.00703,
+              -0.04477,
+              -0.03648,
+              -0.01113,
+              -0.00575,
+              -0.02633,
+              -0.02439,
+              0.01304,
+              -0.01509,
+              0.0005,
+              -0.0646,
+              -0.03157,
+              -0.0614,
+              -0.04321,
+              -0.03002,
+              -0.00254,
+              0.00046,
+              -0.06756,
+              -0.06297,
+              0.01404,
+              0.1632,
+              0.00851,
+              0.05833,
+              -0.01141,
+              -0.0114,
+              0.02776,
+              -0.12785,
+              0.02196,
+              0.04612,
+              -0.02015,
+              -0.02722,
+              -0.02211,
+              -0.01553,
+              -0.01033,
+              0.01602,
+              0.0113,
+              0.02963,
+              -0.00777,
+              -0.00075,
+              0.05269,
+              -0.00377,
+              -0.02796,
+              0.05883,
+              -0.03323,
+              -0.05346,
+              -0.05693,
+              -0.02154,
+              -0.07515,
+              0.15004,
+              0.04621,
+              0.00292,
+              -0.04389,
+              -0.00513,
+              -0.00598,
+              0.03132,
+              -0.01961,
+              0.0042,
+              -0.05067,
+              -0.03133,
+              0.00767
+            ],
+            "k": 6
+          },
+          "via": "mcp",
+          "ms": 9.8,
+          "ok": true
+        },
+        {
+          "tool": "rag_search_cases",
+          "args": {
+            "qv": [
+              0.40986,
+              0.0416,
+              0.32868,
+              0.22767,
+              0.16126,
+              0.08686,
+              -0.12302,
+              0.12344,
+              0.10835,
+              -0.02556,
+              0.06202,
+              0.02496,
+              0.16546,
+              0.04006,
+              0.1066,
+              0.57429,
+              -0.04224,
+              -0.10335,
+              0.09362,
+              -0.07281,
+              -0.06932,
+              0.06582,
+              0.02259,
+              -0.00768,
+              -0.00396,
+              0.0294,
+              -0.02375,
+              0.00221,
+              -0.00795,
+              -0.09195,
+              -0.01318,
+              -0.03556,
+              0.00912,
+              0.0323,
+              -0.02575,
+              0.05476,
+              -0.05408,
+              0.02603,
+              -0.02231,
+              0.02264,
+              0.0605,
+              0.03195,
+              0.03103,
+              -0.03334,
+              -0.0014,
+              0.11261,
+              0.00614,
+              -0.00468,
+              -0.00481,
+              -0.02232,
+              0.00469,
+              -0.04109,
+              -0.00456,
+              0.02061,
+              -0.00357,
+              -0.00741,
+              0.05371,
+              -0.00157,
+              0.01688,
+              -0.00535,
+              0.03007,
+              -0.00097,
+              -0.04992,
+              -0.00441,
+              -0.01449,
+              -0.01657,
+              -0.04096,
+              -0.01912,
+              -0.00703,
+              -0.04477,
+              -0.03648,
+              -0.01113,
+              -0.00575,
+              -0.02633,
+              -0.02439,
+              0.01304,
+              -0.01509,
+              0.0005,
+              -0.0646,
+              -0.03157,
+              -0.0614,
+              -0.04321,
+              -0.03002,
+              -0.00254,
+              0.00046,
+              -0.06756,
+              -0.06297,
+              0.01404,
+              0.1632,
+              0.00851,
+              0.05833,
+              -0.01141,
+              -0.0114,
+              0.02776,
+              -0.12785,
+              0.02196,
+              0.04612,
+              -0.02015,
+              -0.02722,
+              -0.02211,
+              -0.01553,
+              -0.01033,
+              0.01602,
+              0.0113,
+              0.02963,
+              -0.00777,
+              -0.00075,
+              0.05269,
+              -0.00377,
+              -0.02796,
+              0.05883,
+              -0.03323,
+              -0.05346,
+              -0.05693,
+              -0.02154,
+              -0.07515,
+              0.15004,
+              0.04621,
+              0.00292,
+              -0.04389,
+              -0.00513,
+              -0.00598,
+              0.03132,
+              -0.01961,
+              0.0042,
+              -0.05067,
+              -0.03133,
+              0.00767
+            ],
+            "k": 8
+          },
+          "via": "mcp",
+          "ms": 10.7,
+          "ok": true
+        }
+      ],
+      "evidence_ledger": [
+        {
+          "key": "base_rate",
+          "label": "Base rate of fraud among investigated cases (intercept)",
+          "value": 1.0,
+          "weight": -0.8891291521104905,
+          "contribution": -0.8891291521104905,
+          "source": "calibration",
+          "kind": "prior"
+        },
+        {
+          "key": "risk_score",
+          "label": "Bank model risk score 0.79",
+          "value": 0.7861,
+          "weight": -0.17734108595434153,
+          "contribution": -0.23082279394956173,
+          "source": "transaction.risk_score",
+          "kind": "prior"
+        },
+        {
+          "key": "hour_atypical",
+          "label": "transaction hour the customer almost never uses",
+          "value": 1.0,
+          "weight": -1.1372703107368243,
+          "contribution": -1.1372703107368243,
+          "source": "inv_customer_baseline",
+          "kind": "signal"
+        },
+        {
+          "key": "region_novel",
+          "label": "billing region where the customer has no prior history (region 185|87)",
+          "value": 1.0,
+          "weight": -0.9734307669518092,
+          "contribution": -0.9734307669518092,
+          "source": "inv_region_profile",
+          "kind": "signal"
+        },
+        {
+          "key": "region_novel_card_present",
+          "label": "card-present purchase in a new region",
+          "value": 1.0,
+          "weight": -0.9734307669518092,
+          "contribution": -0.9734307669518092,
+          "source": "inv_region_profile",
+          "kind": "signal"
+        },
+        {
+          "key": "dist_far",
+          "label": "large billing distance (dist1 >= 250)",
+          "value": 1.0,
+          "weight": 0.8794445170097565,
+          "contribution": 0.8794445170097565,
+          "source": "inv_region_profile",
+          "kind": "signal"
+        },
+        {
+          "key": "community_fraud",
+          "label": "the card's WCC component contains cards with confirmed fraud (component of 42 cards, 25 with fraud)",
+          "value": 1.0,
+          "weight": 0.8057424858792491,
+          "contribution": 0.8057424858792491,
+          "source": "inv_community",
+          "kind": "signal"
+        },
+        {
+          "key": "prior_fraud_case",
+          "label": "customer/card had a confirmed fraud case before",
+          "value": 1.0,
+          "weight": 0.1458820943601037,
+          "contribution": 0.1458820943601037,
+          "source": "inv_prior_cases",
+          "kind": "signal"
+        },
+        {
+          "key": "CUSTOMER_VALIDATION=CONFIRMED",
+          "label": "customer validation returned CONFIRMED",
+          "value": 1.0,
+          "weight": -2.766239494561123,
+          "contribution": -2.766239494561123,
+          "source": "evidence_request",
+          "kind": "evidence_response"
+        }
+      ],
+      "belief_trajectory": [
+        {
+          "step": "risk score only",
+          "p": 0.246,
+          "ci": [
+            0.1798,
+            0.3394
+          ],
+          "added": []
+        },
+        {
+          "step": "customer_baseline",
+          "p": 0.0947,
+          "ci": [
+            0.0567,
+            0.1562
+          ],
+          "added": [
+            "hour_atypical"
+          ]
+        },
+        {
+          "step": "region_profile",
+          "p": 0.0347,
+          "ci": [
+            0.0233,
+            0.0541
+          ],
+          "added": [
+            "region_novel",
+            "region_novel_card_present",
+            "dist_far"
+          ]
+        },
+        {
+          "step": "prior_cases",
+          "p": 0.04,
+          "ci": [
+            0.0228,
+            0.0696
+          ],
+          "added": [
+            "prior_fraud_case"
+          ]
+        },
+        {
+          "step": "community",
+          "p": 0.0853,
+          "ci": [
+            0.0493,
+            0.1586
+          ],
+          "added": [
+            "community_fraud"
+          ]
+        },
+        {
+          "step": "customer validation: CONFIRMED",
+          "p": 0.0058,
+          "ci": [
+            0.0033,
+            0.0117
+          ],
+          "added": [
+            "CUSTOMER_VALIDATION"
+          ]
+        }
+      ],
+      "subgraph": {
+        "nodes": [
+          {
+            "id": "3061175",
+            "label": "$167.55",
+            "type": "Transaction",
+            "risk": 0.7861,
+            "trigger": true
+          },
+          {
+            "id": "CARD-000024",
+            "label": "CARD-000024",
+            "type": "Card"
+          },
+          {
+            "id": "CUST-100019",
+            "label": "CUST-100019",
+            "type": "Customer"
+          },
+          {
+            "id": "185|87",
+            "label": "region 185|87",
+            "type": "Region"
+          },
+          {
+            "id": "CC-00117",
+            "label": "CC-00117",
+            "type": "FraudCase",
+            "outcome": "CONFIRMED_FRAUD"
+          },
+          {
+            "id": "CC-00103",
+            "label": "CC-00103",
+            "type": "FraudCase",
+            "outcome": "CONFIRMED_FRAUD"
+          },
+          {
+            "id": "CC-00095",
+            "label": "CC-00095",
+            "type": "FraudCase",
+            "outcome": "CONFIRMED_FRAUD"
+          },
+          {
+            "id": "CC-00107",
+            "label": "CC-00107",
+            "type": "FraudCase",
+            "outcome": "CONFIRMED_FRAUD"
+          },
+          {
+            "id": "CC-00123",
+            "label": "CC-00123",
+            "type": "FraudCase",
+            "outcome": "CONFIRMED_FRAUD"
+          },
+          {
+            "id": "CC-00501",
+            "label": "CC-00501",
+            "type": "FraudCase",
+            "outcome": "CONFIRMED_FRAUD",
+            "precedent": true
+          },
+          {
+            "id": "CC-00186",
+            "label": "CC-00186",
+            "type": "FraudCase",
+            "outcome": "CONFIRMED_FRAUD",
+            "precedent": true
+          },
+          {
+            "id": "CC-00256",
+            "label": "CC-00256",
+            "type": "FraudCase",
+            "outcome": "CLEARED",
+            "precedent": true
+          }
+        ],
+        "edges": [
+          {
+            "source": "CUST-100019",
+            "target": "3061175",
+            "type": "MADE"
+          },
+          {
+            "source": "3061175",
+            "target": "CARD-000024",
+            "type": "PAID_WITH"
+          },
+          {
+            "source": "3061175",
+            "target": "185|87",
+            "type": "BILLED_IN"
+          },
+          {
+            "source": "CC-00117",
+            "target": "CARD-000024",
+            "type": "CASE_CARD"
+          },
+          {
+            "source": "CC-00103",
+            "target": "CARD-000024",
+            "type": "CASE_CARD"
+          },
+          {
+            "source": "CC-00095",
+            "target": "CARD-000024",
+            "type": "CASE_CARD"
+          },
+          {
+            "source": "CC-00107",
+            "target": "CARD-000024",
+            "type": "CASE_CARD"
+          },
+          {
+            "source": "CC-00123",
+            "target": "CARD-000024",
+            "type": "CASE_CARD"
+          },
+          {
+            "source": "CC-00501",
+            "target": "3061175",
+            "type": "SIMILAR"
+          },
+          {
+            "source": "CC-00186",
+            "target": "3061175",
+            "type": "SIMILAR"
+          },
+          {
+            "source": "CC-00256",
+            "target": "3061175",
+            "type": "SIMILAR"
+          }
+        ]
+      },
+      "findings": [
+        "[dist_far] large billing distance (dist1 >= 250) (+0.88 log-odds)",
+        "[community_fraud] the card's WCC component contains cards with confirmed fraud (component of 42 cards, 25 with fraud) (+0.81 log-odds)",
+        "[prior_fraud_case] customer/card had a confirmed fraud case before (+0.15 log-odds)",
+        "[CUSTOMER_VALIDATION=CONFIRMED] customer validation returned CONFIRMED (-2.77 log-odds)",
+        "[hour_atypical] transaction hour the customer almost never uses (-1.14 log-odds)",
+        "[region_novel] billing region where the customer has no prior history (region 185|87) (-0.97 log-odds)"
+      ],
+      "llm_investigation": null,
+      "precedent_cases": [
+        {
+          "case_id": "CC-00263",
+          "outcome": "CLEARED",
+          "pattern": "NOT_FRAUD",
+          "actions_taken": "CLOSE_NO_FRAUD;MONITOR_CARD",
+          "evidence_requested": "STEP_UP_AUTH",
+          "evidence_result": "PASSED",
+          "summary": "Online purchase from a new device flagged by model. Customer confirmed new phone; step-up passed. Cleared.",
+          "cards": [
+            "CARD-001225"
+          ],
+          "distance": 0.6620087,
+          "via": [
+            "vector"
+          ],
+          "fused_score": 0.0167
+        },
+        {
+          "case_id": "CC-00501",
+          "score": 0.1629267628208138,
+          "outcome": "CONFIRMED_FRAUD",
+          "pattern": "CARD_TESTING",
+          "via": [
+            "graph-structure"
+          ],
+          "fused_score": 0.0167,
+          "summary": ""
+        },
+        {
+          "case_id": "CC-00462",
+          "outcome": "CLEARED",
+          "pattern": "NOT_FRAUD",
+          "actions_taken": "CLOSE_NO_FRAUD;MONITOR_CARD",
+          "evidence_requested": "STEP_UP_AUTH",
+          "evidence_result": "PASSED",
+          "summary": "Online purchase from a new device flagged by model. Customer confirmed new phone; step-up passed. Cleared.",
+          "cards": [
+            "CARD-001181"
+          ],
+          "distance": 0.6620087,
+          "via": [
+            "vector"
+          ],
+          "fused_score": 0.0164
+        },
+        {
+          "case_id": "CC-00186",
+          "score": 0.1629267628208138,
+          "outcome": "CONFIRMED_FRAUD",
+          "pattern": "SHARED_ENTITY_RING",
+          "via": [
+            "graph-structure"
+          ],
+          "fused_score": 0.0164,
+          "summary": ""
+        },
+        {
+          "case_id": "CC-00219",
+          "outcome": "CLEARED",
+          "pattern": "NOT_FRAUD",
+          "actions_taken": "CLOSE_NO_FRAUD;MONITOR_CARD",
+          "evidence_requested": "STEP_UP_AUTH",
+          "evidence_result": "PASSED",
+          "summary": "Online purchase from a new device flagged by model. Customer confirmed new phone; step-up passed. Cleared.",
+          "cards": [
+            "CARD-001062"
+          ],
+          "distance": 0.6620087,
+          "via": [
+            "vector"
+          ],
+          "fused_score": 0.0161
+        },
+        {
+          "case_id": "CC-00256",
+          "score": 0.1629267628208138,
+          "outcome": "CLEARED",
+          "pattern": "NOT_FRAUD",
+          "via": [
+            "graph-structure"
+          ],
+          "fused_score": 0.0161,
+          "summary": ""
+        }
+      ],
+      "timeline": [
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "TRIGGERED",
+          "type": "status",
+          "title": "Triggered"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "TRIGGERED",
+          "type": "trigger",
+          "title": "RISK_SIGNAL: Model alert: risk score 0.79 on transaction 3061175."
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "status",
+          "title": "Investigating"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP inv_txn_context"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP inv_card_velocity"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP inv_customer_baseline"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP inv_device_profile"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP inv_region_profile"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP inv_identity_consistency"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP inv_linked_entities"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP inv_prior_cases"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP inv_similar_cases"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP inv_community"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP inv_exposure"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "graph",
+          "title": "Subgraph around the trigger"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "OPENED",
+          "type": "case",
+          "title": "Case HHG-020 opened and linked in the graph"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP rag_search_docs"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "tool_call",
+          "title": "MCP rag_search_cases"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "rag",
+          "title": "GraphRAG: 6 policy clauses, 6 precedent cases"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "INVESTIGATING",
+          "type": "llm_note",
+          "title": "Offline mode: deterministic investigation plan (core GSQL toolbox) completed"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "ASSESSED",
+          "type": "status",
+          "title": "Assessed"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "BEFORE_EVIDENCE",
+          "type": "assessment",
+          "title": "P(fraud) = 0.09 (80% CI 0.05-0.16); pattern OUT_OF_REGION"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "BEFORE_EVIDENCE",
+          "type": "nba",
+          "title": "Before Evidence: GATHER -> MONITOR_CARD[AUTO], CREATE_CASE[AUTO], CONTACT_CUSTOMER[AUTO]"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "AWAITING_EVIDENCE",
+          "type": "evidence_request",
+          "title": "Requested CUSTOMER_VALIDATION (CONTACT_CUSTOMER)"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "AWAITING_EVIDENCE",
+          "type": "status",
+          "title": "Awaiting Evidence"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "REASSESSED",
+          "type": "evidence_response",
+          "title": "CUSTOMER_VALIDATION -> CONFIRMED"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "REASSESSED",
+          "type": "status",
+          "title": "Reassessed"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "AFTER_EVIDENCE",
+          "type": "assessment",
+          "title": "P(fraud) = 0.01 (80% CI 0.00-0.01); pattern OUT_OF_REGION"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "AFTER_EVIDENCE",
+          "type": "nba",
+          "title": "After Evidence: RELEASE -> ALLOW_TRANSACTION[AUTO], MONITOR_CARD[AUTO], CLOSE_NO_FRAUD[L1_ANALYST]"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "EXPLAINED",
+          "type": "status",
+          "title": "Explained"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "REMEMBERED",
+          "type": "status",
+          "title": "Remembered"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "REMEMBERED",
+          "type": "memory",
+          "title": "Case, evidence, actions and similar-case links written to TigerGraph"
+        },
+        {
+          "ts": "2026-09-23 09:58:21",
+          "phase": "PENDING_APPROVAL",
+          "type": "status",
+          "title": "Awaiting human approval"
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "phase": "BEFORE_EVIDENCE",
+        "decision": "GATHER",
+        "reason": "Evidence CUSTOMER_VALIDATION is worth requesting: EVSI $14.82 > 0 after its cost $9.37; CONFIRMED (p=0.69) -> P(fraud)=0.01 -> RELEASE; DENIED (p=0.13) -> P(fraud)=0.49 -> PROTECT; NO_REPLY (p=0.18) -> P(fraud)=0.10 -> RELEASE"
+      },
+      {
+        "phase": "AFTER_EVIDENCE",
+        "decision": "RELEASE",
+        "reason": "Stop and act: best decision RELEASE (expected loss PROTECT $122.63 vs RELEASE $2.99); decision stability 100%; no evidence request has positive value of information."
+      }
+    ],
+    "actions_log": [
+      {
+        "ts": "2026-09-23 09:58:21",
+        "what": "CREATE_CASE",
+        "route": "AUTO",
+        "status": "EXECUTED",
+        "receipt": {
+          "action": "CREATE_CASE",
+          "system": "case-management",
+          "status": "EXECUTED",
+          "reference": "MOCK-C36E1BE82C",
+          "executed_at": "2026-09-23 09:58:21",
+          "detail": {}
+        }
+      },
+      {
+        "ts": "2026-09-23 09:58:21",
+        "what": "CONTACT_CUSTOMER",
+        "route": "AUTO",
+        "status": "EXECUTED",
+        "receipt": {
+          "action": "CONTACT_CUSTOMER",
+          "system": "customer-messaging",
+          "status": "EXECUTED",
+          "reference": "MOCK-8454B74CEB",
+          "executed_at": "2026-09-23 09:58:21",
+          "detail": {
+            "kind": "CUSTOMER_VALIDATION"
+          }
+        },
+        "reason": "Evidence CUSTOMER_VALIDATION is worth requesting: EVSI $14.82 > 0 after its cost $9.37; CONFIRMED (p=0.69) -> P(fraud)=0.01 -> RELEASE; DENIED (p=0.13) -> P(fraud)=0.49 -> PROTECT; NO_REPLY (p=0.18) -> P(fraud)=0.10 -> RELEASE"
+      },
+      {
+        "ts": "2026-09-23 09:58:21",
+        "what": "ALLOW_TRANSACTION",
+        "route": "AUTO",
+        "status": "EXECUTED",
+        "receipt": {
+          "action": "ALLOW_TRANSACTION",
+          "system": "authorisation-switch",
+          "status": "EXECUTED",
+          "reference": "MOCK-5A4571B097",
+          "executed_at": "2026-09-23 09:58:21",
+          "detail": {}
+        }
+      },
+      {
+        "ts": "2026-09-23 09:58:21",
+        "what": "MONITOR_CARD",
+        "route": "AUTO",
+        "status": "EXECUTED",
+        "receipt": {
+          "action": "MONITOR_CARD",
+          "system": "monitoring",
+          "status": "EXECUTED",
+          "reference": "MOCK-DB5BF7C3A0",
+          "executed_at": "2026-09-23 09:58:21",
+          "detail": {}
+        }
+      },
+      {
+        "ts": "2026-09-23 09:58:21",
+        "what": "CLOSE_NO_FRAUD",
+        "route": "L1_ANALYST",
+        "status": "PENDING_APPROVAL"
+      }
+    ],
+    "summary": {
+      "executive_summary": "RISK_SIGNAL on transaction 3061175 ($167.55, CARD_PRESENT) on card CARD-000024 of customer CUST-100019 at 2026-05-22 06:11:00. The agent ran 13 graph queries through the TigerGraph MCP server and assessed P(fraud) = 0.09 (80% CI 0.05-0.16) before additional evidence, most consistent with OUT_OF_REGION. Because the decision was uncertain (stability 98%), it requested CUSTOMER_VALIDATION (CONTACT_CUSTOMER), whose expected value of information was $14.82 net of cost. CUSTOMER_VALIDATION returned CONFIRMED. Final assessment P(fraud) = 0.01; decision RELEASE; actions: ALLOW_TRANSACTION (AUTO), MONITOR_CARD (AUTO), CLOSE_NO_FRAUD (L1_ANALYST).",
+      "evidence_for_fraud": [
+        "[dist_far] large billing distance (dist1 >= 250) (+0.88 log-odds)",
+        "[community_fraud] the card's WCC component contains cards with confirmed fraud (component of 42 cards, 25 with fraud) (+0.81 log-odds)",
+        "[prior_fraud_case] customer/card had a confirmed fraud case before (+0.15 log-odds)"
+      ],
+      "evidence_against_fraud": [
+        "[CUSTOMER_VALIDATION=CONFIRMED] customer validation returned CONFIRMED (-2.77 log-odds)",
+        "[hour_atypical] transaction hour the customer almost never uses (-1.14 log-odds)",
+        "[region_novel] billing region where the customer has no prior history (region 185|87) (-0.97 log-odds)"
+      ],
+      "hypotheses": [
+        {
+          "name": "OUT_OF_REGION",
+          "probability": 0.975
+        },
+        {
+          "name": "CNP_NEW_DEVICE",
+          "probability": 0.009
+        },
+        {
+          "name": "UNCLASSIFIED",
+          "probability": 0.006
+        }
+      ],
+      "why_evidence_requested": "Evidence CUSTOMER_VALIDATION is worth requesting: EVSI $14.82 > 0 after its cost $9.37; CONFIRMED (p=0.69) -> P(fraud)=0.01 -> RELEASE; DENIED (p=0.13) -> P(fraud)=0.49 -> PROTECT; NO_REPLY (p=0.18) -> P(fraud)=0.10 -> RELEASE",
+      "why_actions": [
+        "ALLOW_TRANSACTION per POL-3.4; decision RELEASE at P(fraud)=0.01 (stability 100%).",
+        "MONITOR_CARD per POL-3.4, POL-3.10; decision RELEASE at P(fraud)=0.01 (stability 100%).",
+        "CLOSE_NO_FRAUD per POL-3.10; decision RELEASE at P(fraud)=0.01 (stability 100%)."
+      ],
+      "remaining_uncertainty": "80% credible interval 0.00-0.01; decision stability 100%.",
+      "generated_by": "template"
+    }
+  },
+  "next_best_action": {
+    "before_evidence": {
+      "decision": "GATHER",
+      "p_fraud": 0.0853,
+      "ci80": [
+        0.0493,
+        0.1586
+      ],
+      "decision_stability": 0.975,
+      "actions": [
+        {
+          "action": "MONITOR_CARD",
+          "approval_route": "AUTO",
+          "status": "RECOMMENDED",
+          "policy_refs": [
+            "POL-1.4"
+          ],
+          "rationale": "MONITOR_CARD per POL-1.4; decision GATHER at P(fraud)=0.09 (stability 98%)."
+        },
+        {
+          "action": "CREATE_CASE",
+          "approval_route": "AUTO",
+          "status": "RECOMMENDED",
+          "policy_refs": [
+            "POL-1.4"
+          ],
+          "rationale": "CREATE_CASE per POL-1.4; decision GATHER at P(fraud)=0.09 (stability 98%)."
+        },
+        {
+          "action": "CONTACT_CUSTOMER",
+          "approval_route": "AUTO",
+          "status": "EXECUTED",
+          "policy_refs": [
+            "VOI"
+          ],
+          "rationale": "Evidence CUSTOMER_VALIDATION is worth requesting: EVSI $14.82 > 0 after its cost $9.37; CONFIRMED (p=0.69) -> P(fraud)=0.01 -> RELEASE; DENIED (p=0.13) -> P(fraud)=0.49 -> PROTECT; NO_REPLY (p=0.18) -> P(fraud)=0.10 -> RELEASE"
+        }
+      ],
+      "approval_routes": [
+        "AUTO"
+      ],
+      "requires_human_approval": false,
+      "forbidden_by_policy": [],
+      "deferred_by_policy": [],
+      "reason": "Evidence CUSTOMER_VALIDATION is worth requesting: EVSI $14.82 > 0 after its cost $9.37; CONFIRMED (p=0.69) -> P(fraud)=0.01 -> RELEASE; DENIED (p=0.13) -> P(fraud)=0.49 -> PROTECT; NO_REPLY (p=0.18) -> P(fraud)=0.10 -> RELEASE",
+      "expected_loss_usd": {
+        "PROTECT": 112.83,
+        "RELEASE": 43.7
+      },
+      "value_of_information": [
+        {
+          "kind": "CUSTOMER_VALIDATION",
+          "action": "CONTACT_CUSTOMER",
+          "evsi": 14.82,
+          "cost": 9.37,
+          "outcomes": [
+            {
+              "response": "CONFIRMED",
+              "prob": 0.693,
+              "p_after": 0.0058,
+              "decision_after": "RELEASE"
+            },
+            {
+              "response": "DENIED",
+              "prob": 0.129,
+              "p_after": 0.4878,
+              "decision_after": "PROTECT"
+            },
+            {
+              "response": "NO_REPLY",
+              "prob": 0.177,
+              "p_after": 0.1019,
+              "decision_after": "RELEASE"
+            }
+          ]
+        },
+        {
+          "kind": "STEP_UP_AUTH",
+          "action": "STEP_UP_AUTH",
+          "evsi": 12.36,
+          "cost": 2.87,
+          "outcomes": [
+            {
+              "response": "FAILED",
+              "prob": 0.14,
+              "p_after": 0.3657,
+              "decision_after": "PROTECT"
+            },
+            {
+              "response": "PASSED",
+              "prob": 0.86,
+              "p_after": 0.0398,
+              "decision_after": "RELEASE"
+            }
+          ]
+        }
+      ],
+      "sar_required": false
+    },
+    "evidence_requests": [
+      {
+        "kind": "CUSTOMER_VALIDATION",
+        "action": "CONTACT_CUSTOMER",
+        "basis": "value_of_information",
+        "reason": "Evidence CUSTOMER_VALIDATION is worth requesting: EVSI $14.82 > 0 after its cost $9.37; CONFIRMED (p=0.69) -> P(fraud)=0.01 -> RELEASE; DENIED (p=0.13) -> P(fraud)=0.49 -> PROTECT; NO_REPLY (p=0.18) -> P(fraud)=0.10 -> RELEASE",
+        "evsi": 14.82,
+        "cost": 9.37,
+        "outcomes": [
+          {
+            "response": "CONFIRMED",
+            "prob": 0.693,
+            "p_after": 0.0058,
+            "decision_after": "RELEASE"
+          },
+          {
+            "response": "DENIED",
+            "prob": 0.129,
+            "p_after": 0.4878,
+            "decision_after": "PROTECT"
+          },
+          {
+            "response": "NO_REPLY",
+            "prob": 0.177,
+            "p_after": 0.1019,
+            "decision_after": "RELEASE"
+          }
+        ],
+        "status": "ANSWERED",
+        "response": "CONFIRMED"
+      }
+    ],
+    "counterfactual_branches": {
+      "CUSTOMER_VALIDATION": [
+        {
+          "response": "CONFIRMED",
+          "p_fraud": 0.006,
+          "decision": "RELEASE",
+          "actions": [
+            "ALLOW_TRANSACTION[AUTO]",
+            "MONITOR_CARD[AUTO]",
+            "CLOSE_NO_FRAUD[L1_ANALYST]"
+          ],
+          "sar_required": false
+        },
+        {
+          "response": "DENIED",
+          "p_fraud": 0.488,
+          "decision": "PROTECT",
+          "actions": [
+            "WARN_CUSTOMER[AUTO]",
+            "CREATE_CASE[AUTO]",
+            "BLOCK_CARD[L1_ANALYST]"
+          ],
+          "sar_required": false
+        },
+        {
+          "response": "NO_REPLY",
+          "p_fraud": 0.102,
+          "decision": "RELEASE",
+          "actions": [
+            "MONITOR_CARD[AUTO]",
+            "CLOSE_NO_FRAUD[L1_ANALYST]"
+          ],
+          "sar_required": false
+        }
+      ]
+    },
+    "simulated_responses": {},
+    "after_evidence": {
+      "decision": "RELEASE",
+      "p_fraud": 0.0058,
+      "ci80": [
+        0.0033,
+        0.0117
+      ],
+      "decision_stability": 1.0,
+      "actions": [
+        {
+          "action": "ALLOW_TRANSACTION",
+          "approval_route": "AUTO",
+          "status": "EXECUTED",
+          "policy_refs": [
+            "POL-3.4"
+          ],
+          "rationale": "ALLOW_TRANSACTION per POL-3.4; decision RELEASE at P(fraud)=0.01 (stability 100%)."
+        },
+        {
+          "action": "MONITOR_CARD",
+          "approval_route": "AUTO",
+          "status": "EXECUTED",
+          "policy_refs": [
+            "POL-3.4",
+            "POL-3.10"
+          ],
+          "rationale": "MONITOR_CARD per POL-3.4, POL-3.10; decision RELEASE at P(fraud)=0.01 (stability 100%)."
+        },
+        {
+          "action": "CLOSE_NO_FRAUD",
+          "approval_route": "L1_ANALYST",
+          "status": "PENDING_APPROVAL",
+          "policy_refs": [
+            "POL-3.10"
+          ],
+          "rationale": "CLOSE_NO_FRAUD per POL-3.10; decision RELEASE at P(fraud)=0.01 (stability 100%)."
+        }
+      ],
+      "approval_routes": [
+        "AUTO",
+        "L1_ANALYST"
+      ],
+      "requires_human_approval": true,
+      "forbidden_by_policy": [],
+      "deferred_by_policy": [],
+      "reason": "Stop and act: best decision RELEASE (expected loss PROTECT $122.63 vs RELEASE $2.99); decision stability 100%; no evidence request has positive value of information.",
+      "expected_loss_usd": {
+        "PROTECT": 122.63,
+        "RELEASE": 2.99
+      },
+      "value_of_information": [],
+      "sar_required": false
+    },
+    "what_changed": {
+      "p_fraud": [
+        0.0853,
+        0.0058
+      ],
+      "decision": [
+        "GATHER",
+        "RELEASE"
+      ],
+      "added_actions": [
+        "ALLOW_TRANSACTION",
+        "CLOSE_NO_FRAUD"
+      ],
+      "removed_actions": [
+        "CONTACT_CUSTOMER",
+        "CREATE_CASE"
+      ],
+      "evidence_received": {
+        "CUSTOMER_VALIDATION": "CONFIRMED"
+      }
+    }
+  },
+  "suspicious_activity_report": null,
+  "graph_write_back": {
+    "vertex": "FraudCase/HHG-020",
+    "status": "PENDING_APPROVAL",
+    "evidence_vertices": 9,
+    "evidence_requests": 1,
+    "action_vertices": 6,
+    "linked_transactions": 1,
+    "linked_cards": 1,
+    "similar_case_edges": 3,
+    "verified": true
+  }
+}

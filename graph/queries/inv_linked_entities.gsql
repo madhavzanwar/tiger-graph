@@ -1,0 +1,49 @@
+CREATE OR REPLACE QUERY inv_linked_entities(VERTEX<Transaction> txn, INT window_days = 7, INT max_entity_cards = 25) FOR GRAPH Verdict SYNTAX V1 {
+  /* Ring detection: other cards sharing a device or recipient email with the trigger card in the window.
+     Hub entities (more than max_entity_cards cards, e.g. gmail.com) are ignored. */
+  MaxAccum<DATETIME> @@t0;
+  MaxAccum<STRING> @@card;
+  SetAccum<STRING> @card_set;
+  MaxAccum<DOUBLE> @max_risk;
+  OrAccum @prior_fraud;
+  SetAccum<STRING> @via;
+  SetAccum<STRING> @ent;
+  SetAccum<STRING> @@hub_entities;
+  SetAccum<STRING> @@linked;
+  SetAccum<STRING> @@linked_fraud;
+  SetAccum<STRING> @@linked_susp;
+  DATETIME lo;
+  DATETIME hi;
+  S = {txn};
+  S = SELECT s FROM S:s ACCUM @@t0 += s.ts, @@card += s.card_id;
+  lo = datetime_sub(@@t0, INTERVAL window_days DAY);
+  hi = datetime_add(@@t0, INTERVAL window_days DAY);
+  C = SELECT c FROM S:s -(PAID_WITH:e)-> Card:c;
+  CT = SELECT t FROM C:c -(rev_PAID_WITH:e)-> Transaction:t WHERE t.ts >= lo AND t.ts <= hi;
+  DEV = SELECT d FROM CT:t -(USED_DEVICE:e)-> Device:d;
+  EM = SELECT m FROM CT:t -(RECIPIENT_EMAIL:e)-> EmailDomain:m;
+  // window transactions on those entities, grouped by card on the entity
+  DT = SELECT t FROM DEV:d -(rev_USED_DEVICE:e)-> Transaction:t WHERE t.ts >= lo AND t.ts <= hi ACCUM d.@card_set += t.card_id;
+  MT = SELECT t FROM EM:m -(rev_RECIPIENT_EMAIL:e)-> Transaction:t WHERE t.ts >= lo AND t.ts <= hi ACCUM m.@card_set += t.card_id;
+  DEV = SELECT d FROM DEV:d POST-ACCUM IF d.@card_set.size() > max_entity_cards THEN @@hub_entities += d.device_key END;
+  EM = SELECT m FROM EM:m POST-ACCUM IF m.@card_set.size() > max_entity_cards THEN @@hub_entities += m.domain END;
+  L1 = SELECT t FROM DEV:d -(rev_USED_DEVICE:e)-> Transaction:t
+       WHERE d.@card_set.size() <= max_entity_cards AND t.ts >= lo AND t.ts <= hi AND t.card_id != @@card
+       ACCUM t.@via += "device", t.@ent += d.device_key;
+  L2 = SELECT t FROM EM:m -(rev_RECIPIENT_EMAIL:e)-> Transaction:t
+       WHERE m.@card_set.size() <= max_entity_cards AND t.ts >= lo AND t.ts <= hi AND t.card_id != @@card
+       ACCUM t.@via += "recipient_email", t.@ent += m.domain;
+  LT = L1 UNION L2;
+  LC = SELECT c FROM LT:t -(PAID_WITH:e)-> Card:c
+       ACCUM c.@max_risk += t.risk_score, c.@via += t.@via, c.@ent += t.@ent;
+  LF = SELECT c FROM LC:c -(rev_CASE_CARD:e)-> FraudCase:fc
+       WHERE fc.outcome == "CONFIRMED_FRAUD" AND fc.opened_at < @@t0
+       ACCUM c.@prior_fraud += TRUE;
+  LC = SELECT c FROM LC:c
+       POST-ACCUM
+         @@linked += c.card_id,
+         IF c.@prior_fraud THEN @@linked_fraud += c.card_id END,
+         IF c.@max_risk >= 0.5 THEN @@linked_susp += c.card_id END;
+  PRINT @@linked.size() AS n_linked_cards, @@linked_fraud.size() AS n_linked_prior_fraud_cards, @@linked_susp.size() AS n_linked_high_risk_cards,
+        @@hub_entities AS ignored_hub_entities, LC[LC.card_id, LC.@via, LC.@ent, LC.@max_risk, LC.@prior_fraud] AS linked_cards;
+}
