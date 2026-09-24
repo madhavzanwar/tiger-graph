@@ -2,13 +2,13 @@
 ## 100% Compliant Official Submission — Hacker House Goa 2026 (IEEE-CIS Edition)
 
 > **From an uncertain trigger to a defensible, audit-proof action.**  
-> An autonomous fraud investigation platform uniting **Graph Data Science (GDS)**, **Bayesian Decision Theory (VOI / EVSI)**, **FinCEN SAR Regulatory Automation**, and an **Enterprise Cyber-FinTech Command Center**.
+> An autonomous fraud investigation platform uniting **Graph Data Science (GDS)**, **Bayesian Decision Theory (VOI / EVSI)**, **FinCEN SAR Regulatory Automation**, and a **Sophisticated Enterprise Investigation Workbench**.
 
 [![Benchmark](https://img.shields.io/badge/Benchmark%20Validation-100%25%20Passed%20(20%2F20)-brightgreen.svg)](cases/)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel%20Production-blueviolet.svg)](https://hhgoa26-ten.vercel.app)
 [![TigerGraph](https://img.shields.io/badge/TigerGraph-Savanna%20%7C%20MCP%20%7C%20GSQL-orange.svg)](https://www.tigergraph.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](verdict/api/)
-[![React](https://img.shields.io/badge/React%2018-Cyber--FinTech%20UI-61dafb.svg)](ui/)
+[![React](https://img.shields.io/badge/React%2018-Enterprise%20UI-61dafb.svg)](ui/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 🌐 **Live Production Deployment**: [**https://hhgoa26-ten.vercel.app**](https://hhgoa26-ten.vercel.app)  
@@ -18,7 +18,7 @@
 
 ---
 
-## 🖥️ Visual Walkthrough & Cyber-FinTech Interface
+## 🖥️ Visual Walkthrough & Product Interface
 
 ### 1. Case Command Center
 Real-time trigger ingestion, live stream telemetry, high-level KPI metrics, and official IEEE-CIS examination queue.
@@ -181,7 +181,7 @@ hhgoa26/
 │   ├── rag/                  # GraphRAG precedent & regulation retriever
 │   ├── scoring/              # Signal extraction, Bayesian ledger, VOI engine
 │   └── api/                  # FastAPI web server & SSE event streaming
-├── ui/                       # Modern Cyber-FinTech React 18 + Cytoscape cockpit
+├── ui/                       # Sophisticated warm cream + crisp white React 18 + Cytoscape cockpit
 ├── docs/                     # Documentation & presentation assets
 │   ├── screenshots/          # High-resolution application screenshots
 │   └── submission.md         # Official form submission answers

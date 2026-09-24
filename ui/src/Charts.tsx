@@ -14,23 +14,23 @@ import {
 } from "recharts";
 
 const AXIS_STYLE = {
-  stroke: "rgba(255, 255, 255, 0.12)",
+  stroke: "#E2DDD5",
   fontSize: 11,
-  fontFamily: "Plus Jakarta Sans, sans-serif",
-  tick: { fill: "#94a3b8" },
+  fontFamily: "Inter, sans-serif",
+  tick: { fill: "#717780" },
 };
 
 const TOOLTIP_STYLE = {
   contentStyle: {
-    background: "#0e1320",
-    border: "1px solid rgba(255, 255, 255, 0.12)",
-    borderRadius: 10,
-    color: "#f8fafc",
+    background: "#FFFFFF",
+    border: "1px solid #E2DDD5",
+    borderRadius: 8,
+    color: "#191C20",
     fontSize: 12,
-    fontFamily: "Plus Jakarta Sans, sans-serif",
-    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.7)",
+    fontFamily: "Inter, sans-serif",
+    boxShadow: "0 8px 20px -3px rgba(25, 28, 32, 0.08)",
   },
-  itemStyle: { color: "#cbd5e1" },
+  itemStyle: { color: "#484E56" },
 };
 
 /** Belief Trajectory over progressive GSQL query steps */
@@ -46,16 +46,16 @@ export function Trajectory({ steps }: { steps: any[] }) {
   return (
     <ResponsiveContainer width="100%" height={210}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, bottom: 25, left: -10 }}>
-        <CartesianGrid stroke="rgba(255, 255, 255, 0.05)" vertical={false} />
-        <XAxis dataKey="step" {...AXIS_STYLE} interval={0} angle={-20} textAnchor="end" height={35} />
+        <CartesianGrid stroke="#EAE5DB" vertical={false} />
+        <XAxis dataKey="step" {...AXIS_STYLE} interval={0} angle={-15} textAnchor="end" height={35} />
         <YAxis domain={[0, 1]} tickFormatter={(v) => `${Math.round(v * 100)}%`} {...AXIS_STYLE} />
-        <ReferenceLine y={0.5} stroke="rgba(255, 255, 255, 0.2)" strokeDasharray="3 3" />
-        <Area dataKey="band" stroke="none" fill="#06b6d4" fillOpacity={0.16} isAnimationActive={false} />
+        <ReferenceLine y={0.5} stroke="#CBD5E1" strokeDasharray="3 3" />
+        <Area dataKey="band" stroke="none" fill="#182230" fillOpacity={0.08} isAnimationActive={false} />
         <Line
           dataKey="p"
-          stroke="#06b6d4"
-          strokeWidth={2.5}
-          dot={{ r: 4, fill: "#06b6d4", stroke: "#090c14", strokeWidth: 2 }}
+          stroke="#182230"
+          strokeWidth={2.2}
+          dot={{ r: 3.5, fill: "#182230", stroke: "#FFFFFF", strokeWidth: 1.5 }}
           isAnimationActive
         />
         <Tooltip
@@ -87,22 +87,21 @@ export function Ledger({ rows }: { rows: any[] }) {
   return (
     <ResponsiveContainer width="100%" height={Math.max(140, data.length * 26 + 35)}>
       <BarChart data={data} layout="vertical" margin={{ top: 6, right: 20, bottom: 6, left: 10 }}>
-        <CartesianGrid stroke="rgba(255, 255, 255, 0.05)" horizontal={false} />
+        <CartesianGrid stroke="#EAE5DB" horizontal={false} />
         <XAxis type="number" {...AXIS_STYLE} />
-        <YAxis type="category" dataKey="name" width={180} {...AXIS_STYLE} tick={{ fill: "#cbd5e1", fontSize: 11 }} />
-        <ReferenceLine x={0} stroke="rgba(255, 255, 255, 0.3)" />
+        <YAxis type="category" dataKey="name" width={180} {...AXIS_STYLE} tick={{ fill: "#484E56", fontSize: 11 }} />
+        <ReferenceLine x={0} stroke="#94A3B8" />
         <Tooltip
           {...TOOLTIP_STYLE}
-          cursor={{ fill: "rgba(255, 255, 255, 0.03)" }}
+          cursor={{ fill: "rgba(25, 28, 32, 0.03)" }}
           formatter={(v: any, _n: any, p: any) => [
             `${v > 0 ? "+" : ""}${v} log-odds (${p.payload.src})`,
             p.payload.label,
           ]}
-          labelFormatter={() => ""}
         />
-        <Bar dataKey="v" radius={4} barSize={14}>
+        <Bar dataKey="v" radius={[3, 3, 3, 3]}>
           {data.map((d, i) => (
-            <Cell key={i} fill={d.v >= 0 ? "#f43f5e" : "#06b6d4"} />
+            <Cell key={i} fill={d.v >= 0 ? "#DC2626" : "#16A34A"} />
           ))}
         </Bar>
       </BarChart>
@@ -110,97 +109,84 @@ export function Ledger({ rows }: { rows: any[] }) {
   );
 }
 
-/** Pattern Probability Distribution Bar Chart */
-export function PatternBars({ patterns }: { patterns: any[] }) {
-  const data = (patterns || []).slice(0, 6).map((p) => ({
-    name: p.pattern,
-    v: +(p.prob * 100).toFixed(1),
+/** Reliability curve: predicted probability vs observed fraud rate */
+export function Reliability({ bins }: { bins: Array<{ bin: number; pred: number; obs: number; count: number }> }) {
+  const data = (bins || []).map((b) => ({
+    pred: +b.pred.toFixed(2),
+    obs: +b.obs.toFixed(2),
+    count: b.count,
   }));
 
   return (
-    <ResponsiveContainer width="100%" height={Math.max(90, data.length * 26 + 25)}>
-      <BarChart data={data} layout="vertical" margin={{ top: 0, right: 40, bottom: 0, left: 10 }}>
-        <XAxis type="number" domain={[0, 100]} hide />
-        <YAxis type="category" dataKey="name" width={180} {...AXIS_STYLE} tick={{ fill: "#cbd5e1", fontSize: 11 }} />
-        <Tooltip {...TOOLTIP_STYLE} cursor={{ fill: "rgba(255, 255, 255, 0.03)" }} formatter={(v: any) => [`${v}%`, "Likelihood"]} />
-        <Bar
-          dataKey="v"
-          fill="#8b5cf6"
-          radius={4}
-          barSize={12}
-          label={{ position: "right", fill: "#94a3b8", fontSize: 11, formatter: (v: any) => `${v}%` }}
-        />
-      </BarChart>
-    </ResponsiveContainer>
-  );
-}
-
-/** Reliability Calibration Diagram: predicted vs observed */
-export function Reliability({ bins }: { bins: any[] }) {
-  const data = (bins || []).map((b) => ({ x: b.predicted, y: b.observed, n: b.n, bin: b.bin }));
-  return (
-    <ResponsiveContainer width="100%" height={240}>
-      <ComposedChart data={data} margin={{ top: 10, right: 16, bottom: 20, left: -10 }}>
-        <CartesianGrid stroke="rgba(255, 255, 255, 0.05)" />
-        <XAxis
-          type="number"
-          dataKey="x"
-          domain={[0, 1]}
-          {...AXIS_STYLE}
-          label={{ value: "Predicted Probability", position: "insideBottom", offset: -10, fill: "#64748b", fontSize: 11 }}
-        />
-        <YAxis type="number" domain={[0, 1]} {...AXIS_STYLE} />
-        <ReferenceLine segment={[{ x: 0, y: 0 }, { x: 1, y: 1 }]} stroke="rgba(255, 255, 255, 0.25)" strokeDasharray="4 4" />
-        <Line
-          dataKey="y"
-          stroke="#10b981"
-          strokeWidth={2.5}
-          dot={{ r: 5, fill: "#10b981", stroke: "#090c14", strokeWidth: 2 }}
-          isAnimationActive={false}
-        />
+    <ResponsiveContainer width="100%" height={220}>
+      <ComposedChart data={data} margin={{ top: 10, right: 16, bottom: 10, left: -10 }}>
+        <CartesianGrid stroke="#EAE5DB" />
+        <XAxis dataKey="pred" domain={[0, 1]} type="number" {...AXIS_STYLE} tickFormatter={(v) => `${v}`} />
+        <YAxis domain={[0, 1]} {...AXIS_STYLE} tickFormatter={(v) => `${v}`} />
+        <Line dataKey="pred" stroke="#94A3B8" strokeDasharray="3 3" dot={false} isAnimationActive={false} />
+        <Line dataKey="obs" stroke="#182230" strokeWidth={2.2} dot={{ r: 4, fill: "#182230", stroke: "#FFFFFF", strokeWidth: 1.5 }} />
         <Tooltip
           {...TOOLTIP_STYLE}
-          formatter={(v: any, _n: any, p: any) => [`${(v * 100).toFixed(0)}% Observed (n=${p.payload.n})`, p.payload.bin]}
-          labelFormatter={() => ""}
+          formatter={(v: any, n: any, p: any) => [
+            `${v}`,
+            n === "obs" ? `Observed rate (${p.payload.count} cases)` : "Predicted midpoint",
+          ]}
         />
       </ComposedChart>
     </ResponsiveContainer>
   );
 }
 
-/** Learned feature weights */
-export function Weights({ weights }: { weights: any[] }) {
-  const data = [...(weights || [])].sort((a, b) => b.weight - a.weight);
-  const max = Math.max(...data.map((d) => Math.abs(d.weight)), 0.01);
+/** Feature weights bar chart */
+export function Weights({ weights }: { weights: Array<{ signal: string; weight: number; label: string }> }) {
+  const data = (weights || [])
+    .filter((w) => w.weight !== 0)
+    .sort((a, b) => b.weight - a.weight)
+    .slice(0, 12);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 380, overflowY: "auto", paddingRight: 6 }}>
-      {data.map((w: any) => {
-        const isPos = w.weight >= 0;
-        const widthPct = Math.min(100, Math.round((Math.abs(w.weight) / max) * 100));
+    <div style={{ display: "flex", flexDirection: "column", gap: 7, padding: "4px 0" }}>
+      {data.map((w) => {
+        const max = 3.5;
+        const widthPct = Math.min(100, Math.max(8, (Math.abs(w.weight) / max) * 100));
         return (
-          <div key={w.signal} style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: 10, fontSize: 11.5 }}>
-            <span style={{ color: "#cbd5e1", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={w.label}>
+          <div key={w.signal} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 11.5 }}>
+            <span style={{ width: 140, color: "var(--text-secondary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={w.label}>
               {w.signal}
             </span>
-            <div style={{ position: "relative", height: 8, background: "rgba(255, 255, 255, 0.05)", borderRadius: 999, overflow: "hidden" }}>
+            <div style={{ flex: 1, height: 7, background: "var(--bg-inset)", borderRadius: 3, overflow: "hidden" }}>
               <div
                 style={{
-                  position: "absolute",
-                  left: isPos ? "50%" : `calc(50% - ${widthPct / 2}%)`,
-                  width: `${widthPct / 2}%`,
+                  width: `${widthPct}%`,
                   height: "100%",
-                  background: isPos ? "#f43f5e" : "#06b6d4",
-                  borderRadius: 999,
+                  background: w.weight >= 0 ? "#DC2626" : "#16A34A",
+                  borderRadius: 3,
                 }}
               />
             </div>
-            <span style={{ fontFamily: "JetBrains Mono, monospace", color: isPos ? "#f43f5e" : "#06b6d4", textAlign: "right" }}>
-              {isPos ? "+" : ""}{w.weight.toFixed(2)}
+            <span className="mono" style={{ width: 45, textAlign: "right", fontWeight: 600, color: "var(--text-primary)" }}>
+              {w.weight >= 0 ? `+${w.weight.toFixed(2)}` : w.weight.toFixed(2)}
             </span>
           </div>
         );
       })}
     </div>
+  );
+}
+
+/** Pattern distribution bar chart */
+export function PatternBars({ patterns }: { patterns: Record<string, number> }) {
+  const data = Object.entries(patterns || {}).map(([k, v]) => ({ name: k, count: v }));
+
+  return (
+    <ResponsiveContainer width="100%" height={160}>
+      <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, bottom: 4, left: 10 }}>
+        <CartesianGrid stroke="#EAE5DB" horizontal={false} />
+        <XAxis type="number" {...AXIS_STYLE} />
+        <YAxis type="category" dataKey="name" width={140} {...AXIS_STYLE} tick={{ fill: "#484E56", fontSize: 11 }} />
+        <Tooltip {...TOOLTIP_STYLE} />
+        <Bar dataKey="count" fill="#182230" radius={[3, 3, 3, 3]} />
+      </BarChart>
+    </ResponsiveContainer>
   );
 }

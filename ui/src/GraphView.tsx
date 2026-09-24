@@ -2,13 +2,13 @@ import { useEffect, useRef } from "react";
 import cytoscape from "cytoscape";
 
 const TYPE_COLORS: Record<string, string> = {
-  Transaction: "#06b6d4",
-  Card: "#f59e0b",
-  Customer: "#10b981",
-  Device: "#8b5cf6",
-  EmailDomain: "#ec4899",
-  Region: "#3b82f6",
-  FraudCase: "#f43f5e",
+  Transaction: "#182230",   // Deep Oxford Navy
+  Card: "#D97706",          // Warm Amber
+  Customer: "#059669",      // Dignified Emerald
+  Device: "#4F46E5",        // Deep Indigo
+  EmailDomain: "#DB2777",   // Muted Magenta
+  Region: "#2563EB",        // Royal Blue
+  FraudCase: "#DC2626",     // Refined Crimson
 };
 
 export default function GraphView({ graph }: { graph: any }) {
@@ -29,10 +29,10 @@ export default function GraphView({ graph }: { graph: any }) {
           id: String(n.id),
           label: n.label || n.id,
           type: n.type,
-          color: TYPE_COLORS[n.type] || "#94a3b8",
-          size: isTrigger ? 52 : n.type === "Transaction" ? 24 : 32,
-          borderColor: isTrigger ? "#38bdf8" : isConfirmedFraud ? "#f43f5e" : isCleared ? "#10b981" : "rgba(255,255,255,0.15)",
-          borderWidth: isTrigger ? 4 : isConfirmedFraud || isCleared ? 3 : 1.5,
+          color: TYPE_COLORS[n.type] || "#64748B",
+          size: isTrigger ? 48 : n.type === "Transaction" ? 24 : 32,
+          borderColor: isTrigger ? "#0284C7" : isConfirmedFraud ? "#DC2626" : isCleared ? "#16A34A" : "#FFFFFF",
+          borderWidth: isTrigger ? 3 : isConfirmedFraud || isCleared ? 3 : 2,
         },
       });
     }
@@ -59,16 +59,16 @@ export default function GraphView({ graph }: { graph: any }) {
             width: "data(size)",
             height: "data(size)",
             label: "data(label)",
-            color: "#e2e8f0",
-            "font-size": 10,
-            "font-family": "Plus Jakarta Sans, sans-serif",
+            color: "#1E293B",
+            "font-size": 10.5,
+            "font-family": "Inter, sans-serif",
             "font-weight": 600,
             "text-valign": "bottom",
-            "text-margin-y": 5,
+            "text-margin-y": 4,
             "border-width": "data(borderWidth)",
             "border-color": "data(borderColor)",
-            "text-background-opacity": 0.7,
-            "text-background-color": "#090c14",
+            "text-background-opacity": 0.85,
+            "text-background-color": "#FFFFFF",
             "text-background-padding": 3,
             "text-background-shape": "roundrectangle",
           },
@@ -77,20 +77,20 @@ export default function GraphView({ graph }: { graph: any }) {
           selector: "edge",
           style: {
             width: 1.5,
-            "line-color": "rgba(255, 255, 255, 0.15)",
+            "line-color": "#CBD5E1",
             "curve-style": "bezier",
             "target-arrow-shape": "triangle",
-            "target-arrow-color": "rgba(255, 255, 255, 0.25)",
-            "arrow-scale": 0.8,
+            "target-arrow-color": "#94A3B8",
+            "arrow-scale": 0.7,
             "font-size": 8,
-            color: "#64748b",
+            color: "#64748B",
           },
         },
         {
           selector: "edge[label = 'SHARES_ENTITY']",
           style: {
-            "line-color": "#f43f5e",
-            "target-arrow-color": "#f43f5e",
+            "line-color": "#EF4444",
+            "target-arrow-color": "#EF4444",
             "line-style": "dashed",
             width: 2,
           },
@@ -98,7 +98,7 @@ export default function GraphView({ graph }: { graph: any }) {
         {
           selector: "edge[label = 'SIMILAR']",
           style: {
-            "line-color": "#8b5cf6",
+            "line-color": "#6366F1",
             "line-style": "dotted",
             "target-arrow-shape": "none",
             width: 1.5,
@@ -108,7 +108,7 @@ export default function GraphView({ graph }: { graph: any }) {
       layout: {
         name: "cose",
         animate: true,
-        animationDuration: 500,
+        animationDuration: 400,
         nodeRepulsion: () => 12000,
         idealEdgeLength: () => 80,
         padding: 30,
@@ -127,7 +127,7 @@ export default function GraphView({ graph }: { graph: any }) {
     cyRef.current?.layout({
       name: "cose",
       animate: true,
-      animationDuration: 500,
+      animationDuration: 400,
       nodeRepulsion: () => 12000,
       idealEdgeLength: () => 80,
     } as any).run();
@@ -139,27 +139,20 @@ export default function GraphView({ graph }: { graph: any }) {
         <div className="graph-controls">
           <button className="graph-btn" onClick={handleZoomIn} title="Zoom in">+</button>
           <button className="graph-btn" onClick={handleZoomOut} title="Zoom out">−</button>
-          <button className="graph-btn" onClick={handleFit} title="Fit viewport">⛶</button>
-          <button className="graph-btn" onClick={handleResetLayout} title="Rearrange topology">⟳</button>
+          <button className="graph-btn" onClick={handleFit} title="Fit to view">⛶</button>
+          <button className="graph-btn" onClick={handleResetLayout} title="Rearrange layout">↻</button>
         </div>
-        <div ref={containerRef} className="graph-canvas" role="img" aria-label="Investigation subgraph topology" />
+        <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
       </div>
 
-      <div className="graph-legend-pills">
+      {/* Refined clean legend */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, fontSize: 11.5, color: "var(--text-secondary)", padding: "0 2px" }}>
         {Object.entries(TYPE_COLORS).map(([type, color]) => (
-          <span key={type} className="legend-pill">
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: color }} />
-            {type}
-          </span>
+          <div key={type} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: color, display: "inline-block" }} />
+            <span>{type}</span>
+          </div>
         ))}
-        <span className="legend-pill">
-          <span style={{ width: 8, height: 8, borderRadius: "50%", border: "2px solid #f43f5e" }} />
-          Confirmed Fraud
-        </span>
-        <span className="legend-pill">
-          <span style={{ width: 8, height: 8, borderRadius: "50%", border: "2px solid #10b981" }} />
-          Cleared
-        </span>
       </div>
     </div>
   );

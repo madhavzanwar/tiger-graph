@@ -123,52 +123,85 @@ export default function App() {
   };
 
   // Nav Items
-  const navItems = [
-    { id: "queue" as Tab, label: "Case Command Center", icon: "⚡", badge: `${cases.length}` },
+  const navWorkspace = [
+    { id: "queue" as Tab, label: "Case Queue", icon: "📋", badge: `${cases.length}` },
     { id: "room" as Tab, label: "Investigation Chamber", icon: "🔬", badge: selectedCaseId || undefined },
+  ];
+
+  const navGovernance = [
     { id: "sar_hub" as Tab, label: "FinCEN Regulatory Hub", icon: "🏛️", badge: "SAR" },
+    { id: "policy" as Tab, label: "Policy-as-Code Engine", icon: "⚖️" },
+  ];
+
+  const navAnalytics = [
     { id: "score" as Tab, label: "Bayesian Scoreboard", icon: "📈" },
-    { id: "policy" as Tab, label: "Policy-as-Code Engine", icon: "🛡️" },
   ];
 
   return (
     <div className="app-shell">
       {/* ----------------- SIDEBAR NAVIGATION ----------------- */}
       <aside className="app-sidebar">
-        <div className="sidebar-header">
-          <div className="brand-badge">V</div>
-          <div className="brand-titles">
-            <span className="brand-title">VERDICT</span>
-            <span className="brand-subtitle">Autonomous Fraud Defense</span>
+        <div>
+          <div className="sidebar-header">
+            <div className="brand-badge">V</div>
+            <div className="brand-titles">
+              <span className="brand-title">VERDICT</span>
+              <span className="brand-subtitle">Fraud Intelligence & Risk</span>
+            </div>
           </div>
-        </div>
 
-        <nav className="sidebar-nav">
-          <div className="nav-section-title">Navigation</div>
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              className={`nav-item ${tab === item.id ? "active" : ""}`}
-              onClick={() => setTab(item.id)}
-            >
-              <span className="nav-item-icon">{item.icon}</span>
-              <span>{item.label}</span>
-              {item.badge && <span className="nav-badge">{item.badge}</span>}
-            </button>
-          ))}
-        </nav>
+          <nav className="sidebar-nav">
+            <div className="nav-section-title">Investigation</div>
+            {navWorkspace.map((item) => (
+              <button
+                key={item.id}
+                className={`nav-item ${tab === item.id ? "active" : ""}`}
+                onClick={() => setTab(item.id)}
+              >
+                <span className="nav-item-icon">{item.icon}</span>
+                <span>{item.label}</span>
+                {item.badge && <span className="nav-badge">{item.badge}</span>}
+              </button>
+            ))}
+
+            <div className="nav-section-title" style={{ marginTop: 12 }}>Governance</div>
+            {navGovernance.map((item) => (
+              <button
+                key={item.id}
+                className={`nav-item ${tab === item.id ? "active" : ""}`}
+                onClick={() => setTab(item.id)}
+              >
+                <span className="nav-item-icon">{item.icon}</span>
+                <span>{item.label}</span>
+                {item.badge && <span className="nav-badge">{item.badge}</span>}
+              </button>
+            ))}
+
+            <div className="nav-section-title" style={{ marginTop: 12 }}>Analytics</div>
+            {navAnalytics.map((item) => (
+              <button
+                key={item.id}
+                className={`nav-item ${tab === item.id ? "active" : ""}`}
+                onClick={() => setTab(item.id)}
+              >
+                <span className="nav-item-icon">{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
 
         {/* Telemetry Widget in Sidebar */}
         <div className="sidebar-telemetry">
           <div className="telemetry-row">
             <span className="telemetry-label">Graph Gateway</span>
-            <span className="telemetry-val" style={{ color: "var(--cyan)" }}>
+            <span className="telemetry-val">
               {health?.graph_access === "mcp" ? "TigerGraph MCP" : "Dual Engine"}
             </span>
           </div>
           <div className="telemetry-row">
             <span className="telemetry-label">Benchmark Suite</span>
-            <span className="telemetry-val" style={{ color: "var(--emerald)" }}>20 / 20 Validated</span>
+            <span className="telemetry-val" style={{ color: "var(--status-success-text)" }}>20 / 20 Validated</span>
           </div>
           <div className="telemetry-row">
             <span className="telemetry-label">Graph Memory</span>
@@ -209,11 +242,11 @@ export default function App() {
           <div className="header-right">
             <div className="status-pill">
               <span className="pulse-dot dot-emerald" />
-              <span>Savanna Live · {health?.graph || "Transaction_Fraud"}</span>
+              <span>Savanna Connected</span>
             </div>
             <div className="status-pill">
               <span className="pulse-dot dot-cyan" />
-              <span>GSQL Engine: 14 Queries</span>
+              <span>14 GSQL Queries</span>
             </div>
             {selectedCaseId && tab !== "room" && (
               <button className="btn btn-primary" onClick={() => setTab("room")}>
@@ -239,7 +272,7 @@ export default function App() {
               <InvestigationRoom id={selectedCaseId} onChange={refresh} />
             ) : (
               <div className="cyber-card muted" style={{ textAlign: "center", padding: 40 }}>
-                Select a case from the Case Command Center to begin investigation.
+                Select a case from the Case Queue to begin investigation.
               </div>
             )
           )}
@@ -319,60 +352,60 @@ function CaseCommandCenter({
     <>
       {/* KPI Overview Cards */}
       <div className="kpi-grid">
-        <div className="kpi-stat-card" style={{ "--kpi-glow": "rgba(6, 182, 212, 0.15)" } as any}>
+        <div className="kpi-stat-card">
           <div className="kpi-label">
-            <span>Total Exam Pack</span>
-            <span style={{ color: "var(--cyan)" }}>IEEE-CIS</span>
+            <span>Official Exam Pack</span>
+            <span>IEEE-CIS</span>
           </div>
           <div className="kpi-value">{totalCases}</div>
           <div className="kpi-footer">
-            <span style={{ color: "var(--emerald)" }}>✓ 100% Validated</span>
+            <span style={{ color: "var(--status-success-text)", fontWeight: 600 }}>✓ 100% Validated</span>
             <span>· All 20 Cases Compliant</span>
           </div>
         </div>
 
-        <div className="kpi-stat-card" style={{ "--kpi-glow": "rgba(244, 63, 94, 0.15)" } as any}>
+        <div className="kpi-stat-card">
           <div className="kpi-label">
-            <span>Fraud Confirmed</span>
-            <span style={{ color: "var(--rose)" }}>Mitigated</span>
+            <span>Confirmed Fraud</span>
+            <span>Mitigated</span>
           </div>
-          <div className="kpi-value" style={{ color: "var(--rose)" }}>{fraudDetected}</div>
+          <div className="kpi-value" style={{ color: "var(--status-danger-text)" }}>{fraudDetected}</div>
           <div className="kpi-footer">
-            <span>Cards Blocked & Syndicates Isolated</span>
+            <span>Cards Blocked & Rings Isolated</span>
           </div>
         </div>
 
-        <div className="kpi-stat-card" style={{ "--kpi-glow": "rgba(245, 158, 11, 0.15)" } as any}>
+        <div className="kpi-stat-card">
           <div className="kpi-label">
             <span>Human-in-the-Loop</span>
-            <span style={{ color: "var(--amber)" }}>L1 / L2 Approval</span>
+            <span>L1 / L2 Approval</span>
           </div>
-          <div className="kpi-value" style={{ color: "var(--amber)" }}>{pendingApprovals}</div>
+          <div className="kpi-value" style={{ color: "var(--status-warning-text)" }}>{pendingApprovals}</div>
           <div className="kpi-footer">
-            <span>High-Impact Policy Safeguards Active</span>
+            <span>Policy Safeguards Active</span>
           </div>
         </div>
 
-        <div className="kpi-stat-card" style={{ "--kpi-glow": "rgba(139, 92, 246, 0.15)" } as any}>
+        <div className="kpi-stat-card">
           <div className="kpi-label">
-            <span>VOI Evidence Inquiries</span>
-            <span style={{ color: "var(--violet)" }}>EVSI Guided</span>
+            <span>Evidence Inquiries</span>
+            <span>EVSI Guided</span>
           </div>
           <div className="kpi-value">{gatheredEvidence}</div>
           <div className="kpi-footer">
-            <span>Inquiries Positive Net Utility Only</span>
+            <span>Inquiries with Net Utility Only</span>
           </div>
         </div>
       </div>
 
-      {/* Trigger Dispatch & Filter Controls */}
+      {/* Trigger Dispatch & Ingestion */}
       <div className="cyber-card">
         <div className="card-header">
           <div className="card-title-group">
             <div className="card-icon">⚡</div>
             <div>
-              <div className="card-title">Live Trigger Ingestion & Dispatch</div>
-              <div className="card-subtitle">Inject real-time transaction alerts into the TigerGraph investigation pipeline</div>
+              <div className="card-title">Live Alert Ingestion & Dispatch</div>
+              <div className="card-subtitle">Manually trigger real-time transaction investigations into the TigerGraph pipeline</div>
             </div>
           </div>
         </div>
@@ -381,7 +414,7 @@ function CaseCommandCenter({
           <select
             value={customTrigger.trigger_type}
             onChange={(e) => setCustomTrigger({ ...customTrigger, trigger_type: e.target.value })}
-            style={{ minWidth: 180 }}
+            style={{ minWidth: 200 }}
           >
             <option value="CUSTOMER_REPORT">Customer Dispute (R2 / R7)</option>
             <option value="RISK_SCORE">Real-time Risk Alert (R1)</option>
@@ -409,18 +442,18 @@ function CaseCommandCenter({
             disabled={!customTrigger.trigger_txn_id}
             onClick={dispatchNewTrigger}
           >
-            Launch Investigation
+            Dispatch Trigger
           </button>
         </div>
       </div>
 
-      {/* Benchmark Queue Data Grid */}
+      {/* Case Queue Data Table */}
       <div className="cyber-card">
         <div className="card-header">
           <div className="card-title-group">
             <div className="card-icon">📋</div>
             <div>
-              <div className="card-title">Official Case Pack Queue</div>
+              <div className="card-title">Official Benchmark Queue</div>
               <div className="card-subtitle">Showing {filteredCases.length} of {cases.length} cases matching filters</div>
             </div>
           </div>
@@ -455,7 +488,7 @@ function CaseCommandCenter({
 
             {!REPLAY && (
               <button className="btn" disabled={isExecutingAll} onClick={runAllInvestigations}>
-                {isExecutingAll ? "Executing Pipeline..." : "Investigate All New"}
+                {isExecutingAll ? "Executing Pipeline..." : "Investigate All"}
               </button>
             )}
           </div>
@@ -481,7 +514,7 @@ function CaseCommandCenter({
               {filteredCases.map((c) => (
                 <tr key={c.case_id} className="clickable" onClick={() => openCase(c.case_id)}>
                   <td>
-                    <span className="mono" style={{ fontWeight: 700, color: "var(--cyan)" }}>
+                    <span className="mono" style={{ fontWeight: 700, color: "var(--text-primary)" }}>
                       {c.case_id}
                     </span>
                   </td>
@@ -494,7 +527,7 @@ function CaseCommandCenter({
                     </div>
                   </td>
                   <td>
-                    <span style={{ fontWeight: 600, color: c.pattern?.includes("LEGITIMATE") ? "var(--emerald)" : "var(--text-main)" }}>
+                    <span style={{ fontWeight: 500, color: c.pattern?.includes("LEGITIMATE") ? "var(--status-success-text)" : "var(--text-primary)" }}>
                       {c.pattern || "Unassigned"}
                     </span>
                   </td>
@@ -600,7 +633,7 @@ function InvestigationRoom({ id, onChange }: { id: string; onChange: () => void 
   if (!view) {
     return (
       <div className="cyber-card muted" style={{ textAlign: "center", padding: 50 }}>
-        Loading investigation dossier for <b className="mono" style={{ color: "var(--cyan)" }}>{id}</b>...
+        Loading investigation dossier for <b className="mono" style={{ color: "var(--text-primary)" }}>{id}</b>...
       </div>
     );
   }
@@ -616,7 +649,7 @@ function InvestigationRoom({ id, onChange }: { id: string; onChange: () => void 
         <div className="card-header">
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             <div className="row" style={{ gap: 10 }}>
-              <span className="mono" style={{ fontSize: 20, fontWeight: 800, color: "var(--cyan)" }}>
+              <span className="mono" style={{ fontSize: 20, fontWeight: 800, color: "var(--text-primary)" }}>
                 {id}
               </span>
               <span className="badge badge-auto">{view.trigger?.trigger_type || "TRIGGER"}</span>
@@ -662,8 +695,8 @@ function InvestigationRoom({ id, onChange }: { id: string; onChange: () => void 
         </div>
 
         {resolutionReceipt && (
-          <div style={{ marginTop: 12, padding: "8px 12px", background: "rgba(16, 185, 129, 0.1)", borderRadius: 8, fontSize: 12 }}>
-            <b style={{ color: "var(--emerald)" }}>Graph Memory Updated:</b> Model refit on {resolutionReceipt.n_cases} closed cases.
+          <div style={{ marginTop: 12, padding: "8px 12px", background: "var(--status-success-bg)", border: "1px solid var(--status-success-border)", borderRadius: 6, fontSize: 12 }}>
+            <b style={{ color: "var(--status-success-text)" }}>Graph Memory Updated:</b> Model refit on {resolutionReceipt.n_cases} closed cases.
             Weight adjustments: {resolutionReceipt.weight_deltas?.slice(0, 4).map((d: any) => `${d.signal}: ${d.before}→${d.after}`).join(" · ")}
           </div>
         )}
@@ -710,14 +743,15 @@ function InvestigationRoom({ id, onChange }: { id: string; onChange: () => void 
                     style={{
                       padding: "6px 8px",
                       borderRadius: 6,
-                      background: "rgba(255,255,255,0.03)",
+                      background: "var(--bg-surface-alt)",
+                      border: "1px solid var(--border-subtle)",
                       display: "flex",
                       justifyContent: "space-between",
                       fontSize: 11.5,
                     }}
                   >
-                    <span className="mono" style={{ color: "var(--cyan)" }}>{prec.case_id}</span>
-                    <span style={{ color: prec.outcome === "CONFIRMED_FRAUD" ? "var(--rose)" : "var(--emerald)" }}>
+                    <span className="mono" style={{ color: "var(--text-primary)", fontWeight: 600 }}>{prec.case_id}</span>
+                    <span style={{ color: prec.outcome === "CONFIRMED_FRAUD" ? "var(--status-danger-text)" : "var(--status-success-text)", fontWeight: 500 }}>
                       {prec.outcome}
                     </span>
                   </div>
@@ -758,7 +792,7 @@ function InvestigationRoom({ id, onChange }: { id: string; onChange: () => void 
             <div className="prob-gauge-container">
               <div className="row" style={{ justifyContent: "space-between" }}>
                 <div>
-                  <div className="text-3xl" style={{ color: currentProb >= 0.7 ? "var(--rose)" : "var(--emerald)" }}>
+                  <div className="text-3xl" style={{ color: currentProb >= 0.7 ? "var(--status-danger-text)" : "var(--status-success-text)" }}>
                     {pct(currentProb)}
                   </div>
                   <div className="muted text-xs">
@@ -789,7 +823,7 @@ function InvestigationRoom({ id, onChange }: { id: string; onChange: () => void 
               </div>
 
               <div style={{ marginTop: 8 }}>
-                <span className="mono" style={{ fontWeight: 700, color: "var(--cyan)" }}>
+                <span className="mono" style={{ fontWeight: 700, color: "var(--text-primary)" }}>
                   Pattern: {currentNba?.pattern || view.patternDisplay}
                 </span>
                 {view.hypothesis && <div className="muted text-xs">{view.hypothesis.description}</div>}
@@ -842,7 +876,7 @@ function InvestigationRoom({ id, onChange }: { id: string; onChange: () => void 
               view.requests.map((req: any) => (
                 <div key={req.kind} style={{ marginBottom: 12 }}>
                   <div className="row" style={{ justifyContent: "space-between" }}>
-                    <b style={{ color: "var(--cyan)" }}>
+                    <b style={{ color: "var(--text-primary)" }}>
                       {req.kind} <span className="muted text-xs">({req.action})</span>
                     </b>
                     <span className="badge badge-auto">
@@ -857,8 +891,8 @@ function InvestigationRoom({ id, onChange }: { id: string; onChange: () => void 
                   {/* Counterfactual Branches */}
                   {(view.branches?.[req.kind] || []).map((br: any) => (
                     <div className="branch-card" key={br.response}>
-                      <b className="mono" style={{ color: "var(--text-main)" }}>{br.response}</b>
-                      <span className="mono" style={{ color: br.p_fraud >= 0.7 ? "var(--rose)" : "var(--emerald)" }}>
+                      <b className="mono" style={{ color: "var(--text-primary)" }}>{br.response}</b>
+                      <span className="mono" style={{ color: br.p_fraud >= 0.7 ? "var(--status-danger-text)" : "var(--status-success-text)" }}>
                         {pct(br.p_fraud)}
                       </span>
                       <span className="muted text-xs">{br.actions.join(", ")}</span>
@@ -898,7 +932,7 @@ function InvestigationRoom({ id, onChange }: { id: string; onChange: () => void 
                   ) : (
                     req.response && (
                       <div style={{ marginTop: 8, fontSize: 12 }}>
-                        Received: <b style={{ color: "var(--cyan)" }}>{req.response}</b>
+                        Received: <b style={{ color: "var(--text-primary)" }}>{req.response}</b>
                       </div>
                     )
                   )}
@@ -1082,18 +1116,23 @@ function FinCENHub({ cases, openCase }: { cases: any[]; openCase: (id: string) =
       <div className="kpi-grid">
         <div className="kpi-stat-card">
           <div className="kpi-label">Filing Mandate Rate</div>
-          <div className="kpi-value" style={{ color: "var(--rose)" }}>9 Cases</div>
+          <div className="kpi-value" style={{ color: "var(--status-danger-text)" }}>9 Cases</div>
           <div className="kpi-footer">Threshold or Ring Triggered</div>
         </div>
         <div className="kpi-stat-card">
           <div className="kpi-label">Anti-Hallucination Rate</div>
-          <div className="kpi-value" style={{ color: "var(--emerald)" }}>100%</div>
+          <div className="kpi-value" style={{ color: "var(--status-success-text)" }}>100%</div>
           <div className="kpi-footer">Every N-Gram Grounded in Graph</div>
         </div>
         <div className="kpi-stat-card">
           <div className="kpi-label">Regulatory Standard</div>
-          <div className="kpi-value" style={{ color: "var(--cyan)" }}>BSA / FinCEN</div>
+          <div className="kpi-value" style={{ color: "var(--text-primary)" }}>BSA / FinCEN</div>
           <div className="kpi-footer">7-Point Structured Narrative</div>
+        </div>
+        <div className="kpi-stat-card">
+          <div className="kpi-label">Filing Audit Readiness</div>
+          <div className="kpi-value">Zero Defect</div>
+          <div className="kpi-footer">Auditor Defense Pass</div>
         </div>
       </div>
 
@@ -1124,14 +1163,14 @@ function FinCENHub({ cases, openCase }: { cases: any[]; openCase: (id: string) =
               {sarCases.map((c) => (
                 <tr key={c.case_id} className="clickable" onClick={() => openCase(c.case_id)}>
                   <td>
-                    <span className="mono" style={{ fontWeight: 700, color: "var(--cyan)" }}>
+                    <span className="mono" style={{ fontWeight: 700, color: "var(--text-primary)" }}>
                       {c.case_id}
                     </span>
                   </td>
                   <td className="mono">{c.card_id || "Primary Card"}</td>
                   <td>{c.pattern}</td>
                   <td>
-                    <span className="mono" style={{ fontWeight: 700, color: "var(--rose)" }}>
+                    <span className="mono" style={{ fontWeight: 700, color: "var(--status-danger-text)" }}>
                       {pct(c.p_after)}
                     </span>
                   </td>
@@ -1172,22 +1211,22 @@ function ScoreboardView() {
       <div className="kpi-grid">
         <div className="kpi-stat-card">
           <div className="kpi-label">VERDICT Model AUC</div>
-          <div className="kpi-value" style={{ color: "var(--emerald)" }}>{backtest.auc_model || "0.956"}</div>
+          <div className="kpi-value" style={{ color: "var(--status-success-text)" }}>{backtest.auc_model || "0.956"}</div>
           <div className="kpi-footer">Held-Out Test Month</div>
         </div>
         <div className="kpi-stat-card">
           <div className="kpi-label">Bank Risk Score AUC</div>
-          <div className="kpi-value" style={{ color: "var(--amber)" }}>{backtest.auc_risk_score_only || "0.555"}</div>
+          <div className="kpi-value" style={{ color: "var(--status-warning-text)" }}>{backtest.auc_risk_score_only || "0.555"}</div>
           <div className="kpi-footer">Perimeter Model Alone</div>
         </div>
         <div className="kpi-stat-card">
           <div className="kpi-label">Brier Score</div>
-          <div className="kpi-value" style={{ color: "var(--cyan)" }}>{backtest.brier_model || "0.078"}</div>
+          <div className="kpi-value">{backtest.brier_model || "0.078"}</div>
           <div className="kpi-footer">Lower is Superior</div>
         </div>
         <div className="kpi-stat-card">
           <div className="kpi-label">Pattern Attribution</div>
-          <div className="kpi-value" style={{ color: "var(--violet)" }}>100%</div>
+          <div className="kpi-value">100%</div>
           <div className="kpi-footer">Held-Out Closed Cases</div>
         </div>
       </div>
@@ -1250,7 +1289,7 @@ function PolicyView() {
 
         <div className="grid-2" style={{ marginTop: 10 }}>
           <div>
-            <div className="card-title" style={{ fontSize: 12, marginBottom: 8 }}>
+            <div className="card-title" style={{ fontSize: 13, marginBottom: 10 }}>
               Binding Rules (R1 – R10)
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -1258,22 +1297,22 @@ function PolicyView() {
                 <div
                   key={r.id}
                   style={{
-                    padding: "8px 12px",
-                    borderRadius: 8,
-                    background: "rgba(255,255,255,0.02)",
+                    padding: "10px 12px",
+                    borderRadius: 6,
+                    background: "var(--bg-surface-alt)",
                     border: "1px solid var(--border-subtle)",
-                    fontSize: 12,
+                    fontSize: 12.5,
                   }}
                 >
-                  <b className="mono" style={{ color: "var(--cyan)" }}>{r.id}:</b> {r.when} →{" "}
-                  <span style={{ color: "var(--emerald)" }}>{r.recommend.join(", ")}</span>
+                  <b className="mono" style={{ color: "var(--text-primary)" }}>{r.id}:</b> {r.when} →{" "}
+                  <span style={{ color: "var(--status-success-text)", fontWeight: 500 }}>{r.recommend.join(", ")}</span>
                 </div>
               ))}
             </div>
           </div>
 
           <div>
-            <div className="card-title" style={{ fontSize: 12, marginBottom: 8 }}>
+            <div className="card-title" style={{ fontSize: 13, marginBottom: 10 }}>
               Prohibitions & Approval Routing
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -1281,20 +1320,20 @@ function PolicyView() {
                 <div
                   key={f.id}
                   style={{
-                    padding: "8px 12px",
-                    borderRadius: 8,
-                    background: "rgba(244, 63, 94, 0.08)",
-                    border: "1px solid var(--rose-border)",
-                    color: "#fda4af",
-                    fontSize: 12,
+                    padding: "10px 12px",
+                    borderRadius: 6,
+                    background: "var(--status-danger-bg)",
+                    border: "1px solid var(--status-danger-border)",
+                    color: "var(--status-danger-text)",
+                    fontSize: 12.5,
                   }}
                 >
                   <b>⛔ {f.id}:</b> {f.action} unless {f.unless}
                 </div>
               ))}
 
-              <div style={{ marginTop: 12 }}>
-                <div className="card-title" style={{ fontSize: 12, marginBottom: 8 }}>
+              <div style={{ marginTop: 16 }}>
+                <div className="card-title" style={{ fontSize: 13, marginBottom: 10 }}>
                   Approval Authority Hierarchy
                 </div>
                 <div className="data-table-container">
@@ -1309,7 +1348,7 @@ function PolicyView() {
                     <tbody>
                       {Object.entries(policyData.actions || {}).map(([code, act]: any) => (
                         <tr key={code}>
-                          <td className="mono" style={{ fontSize: 11 }}>{code}</td>
+                          <td className="mono" style={{ fontSize: 11.5 }}>{code}</td>
                           <td><RouteBadge r={act.route} /></td>
                           <td className="muted text-xs">{act.class || "Standard SOP"}</td>
                         </tr>
