@@ -1,4 +1,4 @@
-// VITE_REPLAY=1 builds a static, read-only console that reads exported snapshots from /demo (see `verdict export-demo`).
+// VITE_REPLAY=1 builds a static, read-only console reading pre-compiled case dossiers from /demo
 export const REPLAY = (import.meta as any).env?.VITE_REPLAY === "1";
 
 function replayPath(path: string): string {

@@ -1,14 +1,14 @@
-# VERDICT: Agentic Fraud Investigation on TigerGraph
+# ARGUS: Institutional Graph Risk & Fraud Intelligence on TigerGraph
 ## 100% Compliant Official Submission — Hacker House Goa 2026 (IEEE-CIS Edition)
 
 > **From an uncertain trigger to a defensible, audit-proof action.**  
-> An autonomous fraud investigation platform uniting **Graph Data Science (GDS)**, **Bayesian Decision Theory (VOI / EVSI)**, **FinCEN SAR Regulatory Automation**, and a **Sophisticated Enterprise Investigation Workbench**.
+> An autonomous graph risk intelligence platform uniting **Graph Data Science (GDS)**, **Bayesian Decision Theory (VOI / EVSI)**, **FinCEN SAR Regulatory Automation**, and an **Institutional Risk Adjudication Workbench**.
 
 [![Benchmark](https://img.shields.io/badge/Benchmark%20Validation-100%25%20Passed%20(20%2F20)-brightgreen.svg)](cases/)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel%20Production-blueviolet.svg)](https://hhgoa26-ten.vercel.app)
 [![TigerGraph](https://img.shields.io/badge/TigerGraph-Savanna%20%7C%20MCP%20%7C%20GSQL-orange.svg)](https://www.tigergraph.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](verdict/api/)
-[![React](https://img.shields.io/badge/React%2018-Enterprise%20UI-61dafb.svg)](ui/)
+[![React](https://img.shields.io/badge/React%2018-ARGUS%20UI-61dafb.svg)](ui/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 🌐 **Live Production Deployment**: [**https://hhgoa26-ten.vercel.app**](https://hhgoa26-ten.vercel.app)  
@@ -20,27 +20,27 @@
 
 ## 🖥️ Visual Walkthrough & Product Interface
 
-### 1. Case Command Center
-Real-time trigger ingestion, live stream telemetry, high-level KPI metrics, and official IEEE-CIS examination queue.
-![Case Command Center](docs/screenshots/dashboard.png)
+### 1. Triage Operations & Split Incident Board
+Executive risk barometer, multi-attribute filter chips, automated batch execution, and master-detail split incident inspection pane.
+![Triage Operations & Split Incident Board](docs/screenshots/dashboard.png)
 
-### 2. Multi-Modal Investigation Chamber
-Full 3-column analyst cockpit: interactive Cytoscape graph topology with dynamic zoom/layout controls, real-time agent phase transitions, GraphRAG precedent retrieval, Bayesian posterior probability gauge, and evolving Next-Best-Action (NBA) ledger.
-![Investigation Chamber](docs/screenshots/investigation.png)
+### 2. Entity Network Dossier & Graph Topology
+Interactive Cytoscape topology canvas with dynamic layout selection (Force, Concentric, Tree, Circle), vertex inspector flyouts, and dedicated policy adjudication console.
+![Entity Network Dossier & Graph Topology](docs/screenshots/investigation.png)
 
-### 3. FinCEN Regulatory SAR Hub
-Automated Suspicious Activity Report (SAR) generation adhering to the BSA FinCEN 7-point regulatory standard, backed by deterministic anti-hallucination graph grounding.
-![FinCEN SAR Hub](docs/screenshots/sar_hub.png)
+### 3. FinCEN Regulatory Filing Center
+Automated Suspicious Activity Report (SAR) generation adhering to the BSA FinCEN Form 111 7-point standard, backed by deterministic anti-hallucination graph grounding.
+![FinCEN Regulatory Filing Center](docs/screenshots/sar_hub.png)
 
-### 4. Bayesian Reliability & Calibration Scoreboard
+### 4. Risk Engine Observatory & Calibration
 Calibrated against 5,565 historical closed cases, displaying reliability curves (Brier score 0.0778, AUC 0.9555) and learned log-odds feature contributions.
-![Bayesian Scoreboard](docs/screenshots/scoreboard.png)
+![Risk Engine Observatory & Calibration](docs/screenshots/scoreboard.png)
 
 ---
 
 ## ⚡ Key Architectural Breakthroughs
 
-VERDICT is engineered specifically for the messy middle of financial fraud: alerts that are neither trivially false positives nor trivially obvious scams.
+ARGUS is engineered specifically for the messy middle of financial fraud: alerts that are neither trivially false positives nor trivially obvious scams.
 
 - **Dual-Engine Graph Gateway**: Seamlessly bridges **TigerGraph MCP**, **TigerGraph Savanna REST API**, and a zero-dependency **`LocalGraphGateway`** in-memory execution engine that executes all 14 GSQL queries offline with zero runtime crashes.
 - **Bayesian Log-Odds Evidence Ledger**: Transforms multi-hop topological graph findings into additive log-odds evidence updates, reporting calibrated posterior distributions with bootstrap 80% credible intervals (`ci80`).
@@ -56,7 +56,7 @@ VERDICT is engineered specifically for the messy middle of financial fraud: aler
 ```mermaid
 flowchart LR
   T[Trigger<br/>risk alert · customer dispute · analyst] --> O
-  subgraph Agent[VERDICT Cyclic Orchestrator]
+  subgraph Agent[ARGUS Cyclic Orchestrator]
     O[Finite State Machine] --> L[Evidence Ledger<br/>Log-Odds + Bootstrap 80% CI]
     L --> V[Value of Information<br/>EVSI net financial gain vs cost]
     V --> P[Policy-as-Code Engine<br/>R1-R10 · Approval Routes · SAR]
@@ -105,7 +105,7 @@ OFFICIAL HACKATHON EVALUATION SUITE: VALIDATING 20 CASES IN cases/
 PERFECT SCORE: ALL 20 CASES PASS 100% OF HACKATHON VALIDATION CRITERIA!
 ```
 
-### 5. Launch the Analyst Cockpit UI
+### 5. Launch the ARGUS Analyst Console
 Start the full-stack web dashboard (FastAPI backend + Cytoscape interactive graph):
 ```bash
 python -m verdict.cli serve
@@ -181,7 +181,7 @@ hhgoa26/
 │   ├── rag/                  # GraphRAG precedent & regulation retriever
 │   ├── scoring/              # Signal extraction, Bayesian ledger, VOI engine
 │   └── api/                  # FastAPI web server & SSE event streaming
-├── ui/                       # Sophisticated warm cream + crisp white React 18 + Cytoscape cockpit
+├── ui/                       # ARGUS Institutional Graph Risk Platform (React 18 + Cytoscape)
 ├── docs/                     # Documentation & presentation assets
 │   ├── screenshots/          # High-resolution application screenshots
 │   └── submission.md         # Official form submission answers

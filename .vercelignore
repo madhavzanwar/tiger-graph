@@ -1,5 +1,4 @@
-# Vercel hosts the static replay console only (ui/ + ui/public/demo). The Python agent needs TigerGraph + MCP
-# and runs via docker compose, so keep it out of Vercel's framework detection.
+# Vercel hosts the static replay console only (ui/ + ui/public/demo).
 pyproject.toml
 verdict/
 graph/
@@ -11,3 +10,7 @@ artifacts/
 data/
 outputs/
 .venv/
+docs/
+cases/
+*.png
+*.log

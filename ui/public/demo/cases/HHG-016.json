@@ -3,10 +3,10 @@
   "status": "PENDING_APPROVAL",
   "answer": {
     "case_id": "HHG-016",
-    "schema_version": "verdict-answer/1.0",
+    "schema_version": "argus-answer/1.0",
     "generated_at": "2026-09-24T09:26:32Z",
     "agent": {
-      "name": "VERDICT",
+      "name": "ARGUS",
       "version": "0.1.0",
       "llm": {
         "enabled": false,

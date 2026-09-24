@@ -110,11 +110,11 @@ export function Ledger({ rows }: { rows: any[] }) {
 }
 
 /** Reliability curve: predicted probability vs observed fraud rate */
-export function Reliability({ bins }: { bins: Array<{ bin: number; pred: number; obs: number; count: number }> }) {
-  const data = (bins || []).map((b) => ({
-    pred: +b.pred.toFixed(2),
-    obs: +b.obs.toFixed(2),
-    count: b.count,
+export function Reliability({ bins }: { bins: any[] }) {
+  const data = (bins || []).map((b: any) => ({
+    pred: +((b.pred ?? b.predicted ?? 0)).toFixed(2),
+    obs: +((b.obs ?? b.observed ?? 0)).toFixed(2),
+    count: b.count ?? b.n ?? 0,
   }));
 
   return (
