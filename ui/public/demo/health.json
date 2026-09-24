@@ -1,1 +1,1 @@
-{"ok": true, "replay": true, "llm": false, "model": "replay", "graph_access": "mcp", "graph": "ArgusGraph", "dataset": "Official Hackathon Dataset", "synthetic": false}
+{"ok": true, "replay": true, "llm": false, "model": "replay", "graph_access": "mcp", "graph": "TracerGraph", "dataset": "Official Hackathon Dataset", "synthetic": false}
