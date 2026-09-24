@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ARGUS — Institutional Graph Risk Platform & Regulatory Adjudication OS
+   TRACER — Institutional Graph Risk Platform & Regulatory Adjudication OS
    Design Language: Warm Ivory / Cream & Crisp White Editorial Product UI
    ========================================================================== */
 
@@ -136,7 +136,7 @@ body {
    APP SHELL & TOP NAVIGATION BAR
    ========================================================================== */
 
-.argus-shell {
+.tracer-shell {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -145,7 +145,7 @@ body {
   background-color: var(--bg-page);
 }
 
-.argus-topbar {
+.tracer-topbar {
   height: 58px;
   background-color: var(--bg-surface);
   border-bottom: 1px solid var(--border-subtle);
@@ -164,7 +164,7 @@ body {
   gap: 28px;
 }
 
-.argus-brand {
+.tracer-brand {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -468,7 +468,7 @@ body {
    MAIN CONTENT AREA & WORKSPACE WRAPPER
    ========================================================================== */
 
-.argus-main {
+.tracer-main {
   flex: 1;
   overflow-y: auto;
   padding: 24px;

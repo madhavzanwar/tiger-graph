@@ -131,11 +131,11 @@ export default function App() {
   };
 
   return (
-    <div className="argus-shell">
+    <div className="tracer-shell">
       {/* ----------------- TOP INSTITUTIONAL NAVIGATION BAR ----------------- */}
-      <header className="argus-topbar">
+      <header className="tracer-topbar">
         <div className="topbar-left">
-          <div className="argus-brand" onClick={() => setTab("triage")}>
+          <div className="tracer-brand" onClick={() => setTab("triage")}>
             <div className="brand-emblem">◈</div>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -228,7 +228,7 @@ export default function App() {
       )}
 
       {/* ----------------- MAIN VIEWPORT ----------------- */}
-      <main className="argus-main">
+      <main className="tracer-main">
         {tab === "triage" && (
           <TriageIncidentsView
             cases={cases}
