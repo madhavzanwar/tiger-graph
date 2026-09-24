@@ -1,96 +1,73 @@
-# VERDICT: 3-Minute Video Demo Presentation Script
-### TigerGraph Agentic Fraud Investigation Hackathon (Hacker House Goa 2026)
+# ARGUS: 3–5 Minute Video Demo Presentation Script
+### TigerGraph Agentic Fraud Investigation Hackathon (Hacker House Goa 2026 - IEEE-CIS Edition)
 
-**Presenter:** Lead Investigator / Systems Architect  
-**Duration:** 3 Minutes (180 seconds)  
-**Target Video Screen:** Split screen showing the **VERDICT Analyst Cockpit UI (`http://localhost:8000`)** and **Terminal**.
+**Presenter:** Lead Systems Architect / Fraud Investigator  
+**Duration:** 3–5 Minutes (180–300 seconds)  
+**Target Video Screen:** Full-screen walkthrough of the live **ARGUS Risk Platform UI (`http://localhost:8000` or `https://hhgoa26-ten.vercel.app`)** with terminal validation.
 
 ---
 
-## [0:00 - 0:30] Hook & The Core Problem
+## [0:00 - 0:45] Hook & The Core Dilemma
 
-**[Visual: Terminal running `python -m verdict.cli serve`, browser opening to `http://localhost:8000` showing the live Case Queue.]**
+**[Visual: Open browser to `https://hhgoa26-ten.vercel.app` showing the clean ARGUS Triage Operations interface with Executive Risk Barometer.]**
 
 **Speaker:**
 > "In financial fraud investigation, the hardest question isn't *'Is this transaction suspicious?'*  
-> It's: **'Do we know enough to act right now, or should we gather more evidence first?'**
+> It's: **'Do we know enough to take a high-impact punitive action right now, or should we gather more evidence first?'**
 > 
-> Block a card too aggressively on a single weak signal, and you breach bank policy by stranding a legitimate customer abroad. Wait too long, and a syndicated card-testing ring cashes out tens of thousands of dollars.
+> If you freeze a customer's card too aggressively on a single weak perimeter alert, you strand a legitimate cardholder abroad, triggering massive customer friction and violating regulatory safeguards under Policy R1. But if you hesitate too long, an organized card-testing syndicate executes rapid cash-outs across dozens of accounts.
 > 
-> Most AI agents answer this trade-off with pure guesswork. Today, we're presenting **VERDICT**—an autonomous, graph-native fraud investigation system on TigerGraph that replaces LLM guesswork with **Bayesian Decision Theory**, **Graph Data Science**, and **strict regulatory compliance**."
+> Most AI agents answer this trade-off with pure LLM guesswork and hallucinations. 
+> 
+> Today, I'm presenting **ARGUS**—an autonomous, institutional graph risk intelligence platform on TigerGraph that unites **Graph Data Science (GDS)**, **Bayesian Decision Theory (VOI / EVSI)**, and **FinCEN SAR Regulatory Automation**."
 
 ---
 
-## [0:30 - 1:15] Deep-Dive: Live Case Investigation (HHG-001 & HHG-005)
+## [0:45 - 1:45] Live Triage & Entity Network Dossier (HHG-001)
 
-**[Visual: In the UI, click on case `HHG-001` (flagged transaction 3514030, $77.07, score 0.61).]**
-
-**Speaker:**
-> "Let's investigate case **HHG-001**. A real-time risk score fired at 0.61. A single model score is an alert—never a verdict.
-> 
-> Watch the agent work:
-> 1. It calls TigerGraph through the **Model Context Protocol (MCP)**, executing 14 installed GSQL queries across sliding 24-hour windows, device sharing, and geographic velocity.
-> 2. Look at this **Evidence Ledger**: every query result is decomposed into an additive log-odds contribution. It uncovers that the purchaser email domain has never been seen on this account (+1.62 log-odds) and Weakly Connected Components (WCC) reveals that a linked card in its component has confirmed fraud (+0.81 log-odds).
-> 3. Instead of guessing, VERDICT computes the posterior probability: **0.82**, bounded by an 80% credible interval [0.80 - 0.84] across 200 bootstrap refits."
-
-**[Visual: Click on the "Next-Best-Actions" tab in the Cockpit.]**
+**[Visual: In the Triage View, show the Split Triage Mode. Click on incident `HHG-001` (flagged transaction 3514030, $77.07), showing live probability 82%, then click "Open Full Dossier →".]**
 
 **Speaker:**
-> "Notice the **Decision-Theoretic Stopping Rule**: because the expected financial loss of releasing ($507.97) vastly exceeds the cost of protecting ($21.90), and no further evidence inquiry has positive Expected Value of Sample Information (EVSI), the agent stops immediately.
+> "Let's inspect incident **HHG-001**. A perimeter model scored this $77.07 transaction at 0.61. An alert is just a trigger—never a verdict.
 > 
-> It recommends an initial action of `CREATE_CASE` (auto) and `BLOCK_CARD` (L1 human approval), satisfying Bank Policy R2 without unnecessary customer friction."
+> In the **Entity Network Dossier**:
+> 1. ARGUS connects to TigerGraph via the **Model Context Protocol (MCP)**, executing 14 analytical GSQL queries across sliding 24-hour windows, device sharing, and geographic velocity.
+> 2. On our interactive **Cytoscape Topology Canvas**, you can see the multi-hop entity graph: transactions, cards, device fingerprints, and past fraud clusters. We can toggle layout algorithms dynamically—from Force-Directed CoSE physics to Concentric rings or Hierarchical tree views—and inspect vertex degrees with one click.
+> 3. Now look at the **Probabilistic Risk Decomposition** tab: every graph finding is decomposed into an additive log-odds evidence ledger. It uncovers that the purchaser email domain has never been seen on this account (+1.62 log-odds), and Weakly Connected Components (WCC) reveals that a linked card in its community has confirmed fraud (+0.81 log-odds).
+> 4. ARGUS reports a calibrated posterior probability of **0.82**, bounded by an 80% credible interval [0.80 – 0.84] across 200 bootstrap refits. No ungrounded LLM guesses."
 
 ---
 
-## [1:15 - 1:50] The FinCEN SAR & Cross-Card Ring Detection (HHG-006 & HHG-010)
+## [1:45 - 2:45] Decision Theory (VOI/EVSI) & FinCEN SAR Automation (HHG-010)
 
-**[Visual: Navigate in the UI to case `HHG-010` ($1,000.03 online transaction from new device) and open the FinCEN SAR Modal.]**
+**[Visual: Switch to the Adjudication Console on the right, then navigate to `HHG-010` ($1,000.03 transaction) and open the "FinCEN SAR Filing" tab.]**
 
 **Speaker:**
-> "Now let's examine high-exposure and syndicated cases like **HHG-010**.
+> "Notice how ARGUS decides whether to ask for more information:
+> Using **Expected Value of Sample Information (EVSI)**, it prices customer SMS checks against financial loss in dollars. In this case, expected loss from releasing ($507.97) vastly exceeds protection costs ($21.90), and no further evidence inquiry has positive financial utility. ARGUS stops immediately, recommending `CREATE_CASE` (Auto) and `BLOCK_CARD` (L1 Lead approval).
 > 
-> Because exposure exceeds the $1,000 regulatory threshold and connects to an anomalous hardware device profile, bank policy mandates filing a regulatory Suspicious Activity Report (`FILE_REPORT`).
+> Now let's look at high-exposure syndicate cases like **HHG-010** ($1,000.03).
+> Because exposure exceeds the $1,000 threshold and connects to an anomalous hardware device profile, Enterprise Policy R2/R6 mandates filing a regulatory Suspicious Activity Report (`FILE_REPORT`).
 > 
-> Look at the **FinCEN SAR Dossier**:
-> - It drafts a complete 7-point narrative covering subject identity, timeline, channels, and graph linkages.
-> - Crucially, our **Zero-Hallucination Claim Checker** validates every single dollar amount, timestamp, customer ID, and card number against graph ground truth before filing.
-> - Actions are automatically routed: `BLOCK_CARD` waits for Team Lead L1 approval, and `FILE_REPORT` routes to Level-2 Fraud Management approval."
+> Look at the **FinCEN SAR Filing tab**:
+> - ARGUS automatically drafts a complete BSA Form 111 7-point narrative covering subject identity, timeline, channels, and graph linkages.
+> - Crucially, our **Zero-Hallucination Claim Checker** validates every single dollar amount, timestamp, customer ID, and card token against TigerGraph ground truth before filing.
+> - Actions are routed with human-in-the-loop governance: `BLOCK_CARD` awaits L1 Lead approval, and `FILE_REPORT` routes to Level-2 Fraud Management approval."
 
 ---
 
-## [1:50 - 2:30] Official Benchmark Compliance & Validation (20/20 Passed)
+## [2:45 - 3:30] Model Calibration Observatory & 100% Benchmark Score
 
-**[Visual: Switch to Terminal and run `python validate_all_benchmark_cases.py`.]**
-
-**Speaker:**
-> "We didn't just test on synthetic data. VERDICT is evaluated against the **official 26,000-transaction IEEE-CIS Hackathon benchmark dataset**.
-> 
-> Let's run our automated test suite across all 20 exam cases in `cases/`."
-
-**[Visual: Output streams across the terminal, displaying all 20 cases with `OK (Passed 100%)` and the banner `PERFECT SCORE: ALL 20 CASES PASS 100% OF HACKATHON VALIDATION CRITERIA!`.]**
+**[Visual: Click on the "Risk Engine Observatory" top navigation tab, then switch to terminal to run `python validate_all_benchmark_cases.py`.]**
 
 **Speaker:**
-> "Every single case passed with zero validation errors:
-> - 100% schema compliance with top-level fields, initial and final next-best actions, and what-changed deltas.
-> - Perfect SAR synchronization matching `FILE_REPORT`.
-> - Defensible Policy R1–R10 enforcement.
-> - And sub-second response times powered by our resilient Dual-Engine Graph Gateway."
-
----
-
-## [2:30 - 3:00] Conclusion & Why It Wins
-
-**[Visual: Return to the Analyst Cockpit, panning over the interactive Cytoscape graph canvas.]**
-
-**Speaker:**
-> "VERDICT proves that enterprise AI agents don't have to be opaque, hallucinating black boxes.
+> "In the **Risk Engine Observatory**, you can inspect our calibration curves evaluated against 5,565 historical closed cases:
+> - ARGUS achieves a **Brier score of 0.0778** and a **ROC-AUC of 0.9555**—compared to just 0.5548 for the bank's perimeter risk score alone!
+> - It also features bi-directional graph write-back: resolving a case commits persistent `FraudCase` vertices back into TigerGraph for continuous GraphRAG precedent learning.
 > 
-> By fusing:
-> - **TigerGraph's high-speed GSQL analytics**,
-> - **Bayesian log-odds evidence ledgers**,
-> - **Value of Information decision theory**, and
-> - **Zero-hallucination compliance checking**,
+> Finally, let's run the official validation suite across all 20 benchmark exam cases (`HHG-001` through `HHG-020`):
+> `python validate_all_benchmark_cases.py`
 > 
-> VERDICT delivers a turnkey, 100% compliant solution that turns uncertain signals into defensible, audit-ready banking decisions.
+> **Result: 100% Passed. 20 out of 20 cases meet all hackathon schema, policy, and mathematical criteria with zero errors.**
 > 
-> Thank you, and explore our repository on GitHub!"
+> You can test the live system today at **https://hhgoa26-ten.vercel.app** or explore the complete codebase on GitHub. Thank you!"

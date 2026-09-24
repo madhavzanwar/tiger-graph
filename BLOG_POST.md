@@ -1,13 +1,16 @@
-# Engineering the Ultimate Agentic Fraud Investigator on TigerGraph
-### How We Built VERDICT: Fusing Graph Data Science, Bayesian Decision Theory, and FinCEN SAR Automation for Hacker House Goa 2026
+# Engineering ARGUS: Institutional Graph Risk & Fraud Intelligence on TigerGraph
+### Fusing Graph Data Science, Bayesian Decision Theory (VOI), and FinCEN SAR Automation for Hacker House Goa 2026 (IEEE-CIS Edition)
 
-*By the VERDICT Team · Built for TigerGraph Hacker House Goa 2026 (IEEE-CIS Edition)*
+*By Madhav Zanwar · Built for TigerGraph Hacker House Goa 2026 (IEEE-CIS Edition)*
+
+🌐 **Live Production Console**: [https://hhgoa26-ten.vercel.app](https://hhgoa26-ten.vercel.app)  
+📁 **GitHub Repository**: [https://github.com/madhavzanwar/tiger-graph](https://github.com/madhavzanwar/tiger-graph)
 
 ---
 
 ## 1. The Real Challenge in Financial Fraud
 
-In modern card payments, fraud is rarely a glaring neon sign. A $77 charge in another city could be an unauthorized card clone—or it could be a busy cardholder boarding an evening flight. 
+In modern electronic payments, fraud is rarely a glaring neon sign. A $77 charge in another city could be an unauthorized card clone—or it could be a busy cardholder boarding an evening flight. 
 
 For a Tier-1 financial institution, the central problem facing automated fraud systems isn't just *"Is this transaction suspicious?"* It is:
 > **"Do we know enough to take a high-impact punitive action right now, or should we gather more evidence first?"**
@@ -17,7 +20,7 @@ For a Tier-1 financial institution, the central problem facing automated fraud s
 
 Most AI agent hackathon submissions answer this trade-off with **LLM vibes**—prompting a language model to guess whether to block or allow based on loose text instructions.
 
-In this project, we built **VERDICT** (*Value-of-Information Evidence Reasoning & Decision Intelligence for Card Transactions*). We replaced LLM guesswork with:
+In this project, we built **ARGUS** (*Autonomous Risk & Graph Understanding System*). We replaced LLM guesswork with:
 1. **Calibrated Bayesian Evidence Accounting**: Log-odds additive ledger with 80% credible intervals.
 2. **Decision-Theoretic Value of Information (VOI)**: Calculating the Expected Value of Sample Information (EVSI) in dollars before contacting customers.
 3. **Graph Data Science on TigerGraph**: Weakly Connected Components (WCC), Louvain community detection, and PageRank across 26,000+ real transactions.
@@ -28,7 +31,7 @@ In this project, we built **VERDICT** (*Value-of-Information Evidence Reasoning 
 
 ## 2. System Architecture: The Cyclic State Machine
 
-VERDICT implements a cyclic finite state machine designed around operational banking compliance:
+ARGUS implements a cyclic finite state machine designed around operational banking compliance:
 
 ```
 [TRIGGER INGESTION] (Risk Score / Customer Dispute / Analyst Request)
@@ -58,7 +61,7 @@ VERDICT implements a cyclic finite state machine designed around operational ban
 ## 3. Four Core Architectural Innovations
 
 ### Innovation 1: The Calibrated Bayesian Evidence Ledger
-Rather than allowing an LLM to hallucinate risk percentages, VERDICT computes a rigorous log-odds evidence ledger:
+Rather than allowing an LLM to hallucinate risk percentages, ARGUS computes a rigorous log-odds evidence ledger:
 $$\text{logit} \, P(\text{fraud}) = \beta_0 + w_{\text{risk}} \cdot \text{logit}(\text{risk\_score}) + \sum_{i} w_i \cdot \text{signal}_i + \sum_{j} \text{LLR}(\text{evidence}_j)$$
 
 - $\beta_0$: Calibrated prior base rate of fraud from historical closed cases.
@@ -83,7 +86,7 @@ Payment fraud is organized in syndicated rings. We executed 14 installed GSQL qu
 - **`inv_identity_consistency`**: Match flag discrepancies and email domain alterations indicating Account Takeover (ATO).
 
 ### Innovation 4: Anti-Hallucination Claim-Checked SAR Generation
-When Policy R2 or R6 mandates filing a regulatory Suspicious Activity Report (`FILE_REPORT`), VERDICT drafts a 7-point narrative (Subject, Timeline, Geography, Channels, Graph Linkages, Exposure, Disposition).
+When Policy R2 or R6 mandates filing a regulatory Suspicious Activity Report (`FILE_REPORT`), ARGUS drafts a 7-point narrative (Subject, Timeline, Geography, Channels, Graph Linkages, Exposure, Disposition).
 
 Before the report is finalized, `verdict/outputs/claim_checker.py` extracts every entity identifier, monetary amount, date, and card token, validating them against the graph context. If any hallucinated assertion is detected, the report immediately falls back to a verified deterministic template.
 
@@ -91,7 +94,7 @@ Before the report is finalized, `verdict/outputs/claim_checker.py` extracts ever
 
 ## 4. Benchmark Results: 100% Evaluation Compliance
 
-We evaluated VERDICT against the true official IEEE-CIS benchmark dataset (`case_pack.csv`):
+We evaluated ARGUS against the official IEEE-CIS benchmark dataset (`case_pack.csv`):
 
 ```
 ==========================================================================================
@@ -125,16 +128,19 @@ PERFECT SCORE: ALL 20 CASES PASS 100% OF HACKATHON VALIDATION CRITERIA!
 
 ---
 
-## 5. What We Learned
+## 5. What We Learned with TigerGraph
 
 Building an enterprise-ready AI investigator taught us three enduring lessons:
-1. **Never let an LLM do mathematics**: Language models are exceptional at summarizing evidence, formulating hypotheses, and drafting regulatory narratives. They should never be responsible for computing probabilities, calculating loss functions, or routing policy approvals.
-2. **Graph databases are essential for fraud**: Single-row relational tables miss 90% of fraud context. The difference between an ordinary customer and a card-testing syndicate is found in multi-hop entity sharing across device fingerprints and billing regions.
-3. **Turnkey resilience is mandatory**: Hackathon judges and production operators need systems that run anywhere, anytime. Our Dual-Engine Graph Gateway guarantees seamless fallback between live TigerGraph Savanna and high-speed local graph traversal without dropping a beat.
+1. **Graph databases are mandatory for payments**: Single-row relational tables miss 90% of fraud context. The difference between an ordinary customer and a card-testing syndicate is found in multi-hop entity sharing across device fingerprints, cards, and recipient email domains.
+2. **Never let an LLM do mathematics**: Language models are exceptional at summarizing evidence, formulating hypotheses, and drafting regulatory narratives. They should never be responsible for computing probabilities, calculating loss functions, or routing policy approvals.
+3. **Turnkey resilience is essential**: Enterprise systems require high reliability. Our Dual-Engine Graph Gateway guarantees seamless bridging between live TigerGraph Savanna REST API, TigerGraph MCP, and high-speed local graph traversal.
 
 ---
 
 ## 6. Try It Out
+
+- **Live Production App**: [https://hhgoa26-ten.vercel.app](https://hhgoa26-ten.vercel.app)
+- **GitHub Repository**: [https://github.com/madhavzanwar/tiger-graph](https://github.com/madhavzanwar/tiger-graph)
 
 ```bash
 # 1. Run the benchmark across all 20 cases
@@ -143,8 +149,6 @@ python -m verdict.cli benchmark
 # 2. Run the official schema test suite
 python validate_all_benchmark_cases.py
 
-# 3. Launch the full-stack analyst cockpit
+# 3. Launch the full-stack analyst console
 python -m verdict.cli serve
 ```
-
-Visit the GitHub repository to inspect the code, explore the GSQL algorithms, and try the interactive analyst cockpit!
