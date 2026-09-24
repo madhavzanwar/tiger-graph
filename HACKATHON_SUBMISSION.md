@@ -1,5 +1,5 @@
 # TigerGraph × Hacker House Goa 2026: Agentic Fraud Investigation
-## Official Hackathon Submission Report — VERDICT (IEEE-CIS Edition)
+## Official Hackathon Submission Report — TRACER (IEEE-CIS Edition)
 
 **Track:** Task 4 — Agentic Fraud Investigation  
 **Dataset:** Official IEEE-CIS Fraud Detection Benchmark (26,643 transactions, 11,800 identity records, 5,565 closed cases)  
@@ -10,14 +10,14 @@
 
 ## 1. Executive Summary
 
-**VERDICT** (*Value-of-Information Evidence Reasoning & Decision Intelligence for Card Transactions*) is an autonomous, graph-native fraud investigation system built on **TigerGraph Savanna** and the **TigerGraph Model Context Protocol (MCP)**.
+**TRACER** (*Value-of-Information Evidence Reasoning & Decision Intelligence for Card Transactions*) is an autonomous, graph-native fraud investigation system built on **TigerGraph Savanna** and the **TigerGraph Model Context Protocol (MCP)**.
 
 Modern financial fraud operates across distributed identity proxies, micro-transaction velocity bursts, and syndicated device rings that perimeter rules cannot detect. Most agentic solutions either:
 1. Treat LLMs as ungrounded black boxes that hallucinate non-existent evidence; or
 2. Suffer brittle crashes when graph services experience transient latency or downtime; or
 3. Block legitimate cardholders on weak, single-point indicators, causing severe customer friction.
 
-**VERDICT** fuses **Graph Data Science (GDS)**, **Bayesian Decision Theory (VOI/EVSI)**, and **Dual-Engine Graph Resilience** into an enterprise-grade agent. It evaluates the 20 official benchmark cases with **100% compliance**, generating rigorous internal case dossiers, dynamic Next-Best-Action approval routes, and automated FinCEN-compliant Suspicious Activity Reports (SAR).
+**TRACER** fuses **Graph Data Science (GDS)**, **Bayesian Decision Theory (VOI/EVSI)**, and **Dual-Engine Graph Resilience** into an enterprise-grade agent. It evaluates the 20 official benchmark cases with **100% compliance**, generating rigorous internal case dossiers, dynamic Next-Best-Action approval routes, and automated FinCEN-compliant Suspicious Activity Reports (SAR).
 
 ---
 
@@ -102,7 +102,7 @@ Modern financial fraud operates across distributed identity proxies, micro-trans
 
 All 20 cases passed 100% of the official hackathon schema and policy tests:
 
-| Case ID | Verdict | Pattern | P(fraud) | Exposure | SAR Filed | Final Recommended Actions | Status |
+| Case ID | Tracer | Pattern | P(fraud) | Exposure | SAR Filed | Final Recommended Actions | Status |
 | :--- | :--- | :--- | :---: | :---: | :---: | :--- | :--- |
 | **HHG-001** | `fraud` | `account_takeover` | 0.82 | $77.07 | False | `CREATE_CASE` (auto), `BLOCK_CARD` (L1) | Passed |
 | **HHG-002** | `legitimate` | `none` | 0.04 | $0.00 | False | `CLOSE_NO_FRAUD` (auto) | Passed |
@@ -137,7 +137,7 @@ pip install -r requirements.txt
 ### Step 2: Run the Official Benchmark Evaluation
 Executes the agent across all 20 exam cases, generating both `cases/<id>.json` and `outputs/answers/<id>.json`:
 ```bash
-python -m verdict.cli benchmark
+python -m tracer.cli benchmark
 ```
 
 ### Step 3: Run the Official Compliance Test Suite
@@ -150,7 +150,7 @@ python validate_all_benchmark_cases.py
 ### Step 4: Launch the Analyst Cockpit UI
 Starts the full-stack web dashboard (FastAPI backend + React Cytoscape SPA):
 ```bash
-python -m verdict.cli serve
+python -m tracer.cli serve
 ```
 Open **`http://localhost:8000`** in your browser.
 
@@ -158,4 +158,4 @@ Open **`http://localhost:8000`** in your browser.
 
 ## 6. Conclusion
 
-VERDICT provides the definitive benchmark submission for the Hacker House Goa 2026 hackathon. By harmonizing advanced mathematical decision theory (VOI / EVSI) with 100% benchmark compliance, GSQL graph algorithms, and an enterprise-grade cyber-fintech UI, it delivers an unimpeachable 100/100 solution ready for production banking deployment.
+TRACER provides the definitive benchmark submission for the Hacker House Goa 2026 hackathon. By harmonizing advanced mathematical decision theory (VOI / EVSI) with 100% benchmark compliance, GSQL graph algorithms, and an enterprise-grade cyber-fintech UI, it delivers an unimpeachable 100/100 solution ready for production banking deployment.

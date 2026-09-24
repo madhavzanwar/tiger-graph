@@ -1,11 +1,10 @@
-# Engineering ARGUS: Institutional Graph Risk & Fraud Intelligence on TigerGraph
+# Engineering TRACER: Institutional Graph Risk & Fraud Intelligence on TigerGraph
 ### Fusing Graph Data Science, Bayesian Decision Theory (VOI), and FinCEN SAR Automation for Hacker House Goa 2026 (IEEE-CIS Edition)
 
 *By Madhav Zanwar · Built for TigerGraph Hacker House Goa 2026 (IEEE-CIS Edition)*
 
 🌐 **Live Production Console**: [https://hhgoa26-ten.vercel.app](https://hhgoa26-ten.vercel.app)  
 📁 **GitHub Repository**: [https://github.com/madhavzanwar/tiger-graph](https://github.com/madhavzanwar/tiger-graph)
-
 ---
 
 ## 1. The Real Challenge in Financial Fraud
@@ -20,8 +19,7 @@ For a Tier-1 financial institution, the central problem facing automated fraud s
 
 Most AI agent hackathon submissions answer this trade-off with **LLM vibes**—prompting a language model to guess whether to block or allow based on loose text instructions.
 
-In this project, we built **ARGUS** (*Autonomous Risk & Graph Understanding System*). We replaced LLM guesswork with:
-1. **Calibrated Bayesian Evidence Accounting**: Log-odds additive ledger with 80% credible intervals.
+In this project, we built **TRACER** (*Autonomous Risk & Graph Understanding System*). We replaced LLM guesswork with:1. **Calibrated Bayesian Evidence Accounting**: Log-odds additive ledger with 80% credible intervals.
 2. **Decision-Theoretic Value of Information (VOI)**: Calculating the Expected Value of Sample Information (EVSI) in dollars before contacting customers.
 3. **Graph Data Science on TigerGraph**: Weakly Connected Components (WCC), Louvain community detection, and PageRank across 26,000+ real transactions.
 4. **Zero-Hallucination FinCEN SAR Automation**: Programmatic claim checking against graph ground truth.
@@ -31,8 +29,7 @@ In this project, we built **ARGUS** (*Autonomous Risk & Graph Understanding Syst
 
 ## 2. System Architecture: The Cyclic State Machine
 
-ARGUS implements a cyclic finite state machine designed around operational banking compliance:
-
+TRACER implements a cyclic finite state machine designed around operational banking compliance:
 ```
 [TRIGGER INGESTION] (Risk Score / Customer Dispute / Analyst Request)
          │
@@ -61,8 +58,7 @@ ARGUS implements a cyclic finite state machine designed around operational banki
 ## 3. Four Core Architectural Innovations
 
 ### Innovation 1: The Calibrated Bayesian Evidence Ledger
-Rather than allowing an LLM to hallucinate risk percentages, ARGUS computes a rigorous log-odds evidence ledger:
-$$\text{logit} \, P(\text{fraud}) = \beta_0 + w_{\text{risk}} \cdot \text{logit}(\text{risk\_score}) + \sum_{i} w_i \cdot \text{signal}_i + \sum_{j} \text{LLR}(\text{evidence}_j)$$
+Rather than allowing an LLM to hallucinate risk percentages, TRACER computes a rigorous log-odds evidence ledger:$$\text{logit} \, P(\text{fraud}) = \beta_0 + w_{\text{risk}} \cdot \text{logit}(\text{risk\_score}) + \sum_{i} w_i \cdot \text{signal}_i + \sum_{j} \text{LLR}(\text{evidence}_j)$$
 
 - $\beta_0$: Calibrated prior base rate of fraud from historical closed cases.
 - $w_{\text{risk}}$: Bank real-time model feature weight.
@@ -86,21 +82,19 @@ Payment fraud is organized in syndicated rings. We executed 14 installed GSQL qu
 - **`inv_identity_consistency`**: Match flag discrepancies and email domain alterations indicating Account Takeover (ATO).
 
 ### Innovation 4: Anti-Hallucination Claim-Checked SAR Generation
-When Policy R2 or R6 mandates filing a regulatory Suspicious Activity Report (`FILE_REPORT`), ARGUS drafts a 7-point narrative (Subject, Timeline, Geography, Channels, Graph Linkages, Exposure, Disposition).
-
-Before the report is finalized, `verdict/outputs/claim_checker.py` extracts every entity identifier, monetary amount, date, and card token, validating them against the graph context. If any hallucinated assertion is detected, the report immediately falls back to a verified deterministic template.
+When Policy R2 or R6 mandates filing a regulatory Suspicious Activity Report (`FILE_REPORT`), TRACER drafts a 7-point narrative (Subject, Timeline, Geography, Channels, Graph Linkages, Exposure, Disposition).
+Before the report is finalized, `tracer/outputs/claim_checker.py` extracts every entity identifier, monetary amount, date, and card token, validating them against the graph context. If any hallucinated assertion is detected, the report immediately falls back to a verified deterministic template.
 
 ---
 
 ## 4. Benchmark Results: 100% Evaluation Compliance
 
-We evaluated ARGUS against the official IEEE-CIS benchmark dataset (`case_pack.csv`):
-
+We evaluated TRACER against the official IEEE-CIS benchmark dataset (`case_pack.csv`):
 ```
 ==========================================================================================
 OFFICIAL HACKATHON EVALUATION SUITE: VALIDATING 20 CASES IN cases/
 ==========================================================================================
-Case      | Verdict      | Pattern                      | Prob  | Exposure   | SAR   | Status
+Case      | Tracer      | Pattern                      | Prob  | Exposure   | SAR   | Status
 ------------------------------------------------------------------------------------------
 HHG-001   | fraud        | account_takeover             | 0.82  | $77.07     | False | 100% Pass
 HHG-002   | legitimate   | none                         | 0.04  | $0.00      | False | 100% Pass
@@ -144,11 +138,10 @@ Building an enterprise-ready AI investigator taught us three enduring lessons:
 
 ```bash
 # 1. Run the benchmark across all 20 cases
-python -m verdict.cli benchmark
+python -m tracer.cli benchmark
 
 # 2. Run the official schema test suite
 python validate_all_benchmark_cases.py
 
 # 3. Launch the full-stack analyst console
-python -m verdict.cli serve
-```
+python -m verdict.cli serve```

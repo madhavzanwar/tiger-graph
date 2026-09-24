@@ -139,7 +139,7 @@ export default function App() {
             <div className="brand-emblem">◈</div>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span className="brand-name">ARGUS</span>
+                <span className="brand-name">TRACER</span>
                 <span className="brand-tag">RISK OS</span>
               </div>
             </div>
@@ -783,7 +783,7 @@ function EntityDossierView({ id, onChange }: { id: string; onChange: () => void 
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `ARGUS_DOSSIER_${id}.json`;
+    a.download = `TRACER_DOSSIER_${id}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -1337,7 +1337,7 @@ function ObservatoryView() {
       <div className="executive-summary-strip">
         <div className="summary-metric-card">
           <div className="metric-header">
-            <span className="metric-title">ARGUS Model AUC</span>
+            <span className="metric-title">TRACER Model AUC</span>
             <span className="metric-tag">GRAPH + BAYES</span>
           </div>
           <div className="metric-value" style={{ color: "var(--status-success-text)" }}>{backtest.auc_model || "0.956"}</div>

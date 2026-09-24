@@ -145,47 +145,57 @@ def prepare(data_dir: Path | None = None, out_dir: Path | None = None) -> dict:
     emails = pd.DataFrame({"domain": sorted((set(t["p_email"]) | set(t["r_email"])) - {""})})
 
     # closed cases canonical
+    def _cget(df, cm_dict, key, default=""):
+        mapped = cm_dict.get(key)
+        if mapped and mapped in df:
+            return df[mapped]
+        if key in df:
+            return df[key]
+        return pd.Series([default] * len(df))
+
     fraud_vals = set(str(v) for v in cm["fraud_outcome_values"])
     cases = pd.DataFrame({
-        "case_id": cc[cm["case_id"]].map(_clean),
+        "case_id": _cget(cc, cm, "case_id").map(_clean),
         "source": "HISTORY",
-        "trigger_type": cc[cm["trigger_type"]].map(_clean) if cm.get("trigger_type") in cc else "",
+        "trigger_type": _cget(cc, cm, "trigger_type").map(_clean),
         "status": "CLOSED",
-        "opened_at": pd.to_datetime(cc[cm["opened_at"]], errors="coerce").dt.strftime("%Y-%m-%d %H:%M:%S") if cm.get("opened_at") in cc else "",
-        "closed_at": pd.to_datetime(cc[cm["closed_at"]], errors="coerce").dt.strftime("%Y-%m-%d %H:%M:%S") if cm.get("closed_at") in cc else "",
-        "outcome": np.where(cc[cm["outcome"]].astype(str).str.strip().str.upper().isin({v.upper() for v in fraud_vals}), "CONFIRMED_FRAUD", "CLEARED"),
-        "pattern": cc[cm["pattern"]].map(_clean).str.upper() if cm.get("pattern") in cc else "",
-        "evidence_requested": cc[cm["evidence_requested"]].map(_clean) if cm.get("evidence_requested") in cc else "",
-        "evidence_result": cc[cm["evidence_result"]].map(_clean) if cm.get("evidence_result") in cc else "",
-        "actions_taken": cc[cm["actions_taken"]].map(_clean) if cm.get("actions_taken") in cc else "",
-        "sar_filed": cc[cm["sar_filed"]].map(_clean) if cm.get("sar_filed") in cc else "",
-        "summary": cc[cm["narrative"]].map(_clean) if cm.get("narrative") in cc else "",
-        "customer_id": cc[cm["customer_id"]].map(_clean) if cm.get("customer_id") in cc else "",
-        "card_id": cc[cm["card_id"]].map(_clean),
-        "trigger_txn_id": cc[cm["trigger_txn_id"]].map(_num_str) if cm.get("trigger_txn_id") in cc else "",
+        "opened_at": pd.to_datetime(_cget(cc, cm, "opened_at"), errors="coerce").dt.strftime("%Y-%m-%d %H:%M:%S"),
+        "closed_at": pd.to_datetime(_cget(cc, cm, "closed_at"), errors="coerce").dt.strftime("%Y-%m-%d %H:%M:%S"),
+        "outcome": np.where(_cget(cc, cm, "outcome").astype(str).str.strip().str.upper().isin({v.upper() for v in fraud_vals}), "CONFIRMED_FRAUD", "CLEARED"),
+        "pattern": _cget(cc, cm, "pattern").map(_clean).str.upper() if cm.get("pattern") in cc or "pattern" in cc or "fraud_pattern" in cc else _cget(cc, cm, "fraud_pattern").map(_clean).str.upper(),
+        "evidence_requested": _cget(cc, cm, "evidence_requested").map(_clean),
+        "evidence_result": _cget(cc, cm, "evidence_result").map(_clean),
+        "actions_taken": _cget(cc, cm, "actions_taken").map(_clean),
+        "sar_filed": _cget(cc, cm, "sar_filed").map(_clean),
+        "summary": _cget(cc, cm, "narrative").map(_clean) if cm.get("narrative") in cc or "narrative" in cc else _cget(cc, cm, "analyst_notes").map(_clean),
+        "customer_id": _cget(cc, cm, "customer_id").map(_clean),
+        "card_id": _cget(cc, cm, "card_id").map(_clean),
+        "trigger_txn_id": _cget(cc, cm, "trigger_txn_id").map(_num_str),
     })
     case_txn, case_card = [], []
     for _, r in cc.iterrows():
-        cid = _clean(r[cm["case_id"]])
-        trig = _num_str(r.get(cm["trigger_txn_id"]))
-        for tid in ids(r.get(cm["involved_txn_ids"])):
+        cid = _clean(r.get(cm.get("case_id", "case_id"), r.get("case_id")))
+        trig = _num_str(r.get(cm.get("trigger_txn_id", "trigger_txn_id"), r.get("trigger_txn_id", "")))
+        inv_val = r.get(cm.get("involved_txn_ids", "involved_txn_ids"), r.get("involved_txn_ids", ""))
+        for tid in ids(inv_val):
             case_txn.append((cid, tid, "TRIGGER" if tid == trig else "INVOLVED"))
-        if trig and trig not in ids(r.get(cm["involved_txn_ids"])):
+        if trig and trig not in ids(inv_val):
             case_txn.append((cid, trig, "TRIGGER"))
-        case_card.append((cid, _clean(r[cm["card_id"]]), "PRIMARY"))
-        for c in _clean(r.get(cm["connected_card_ids"])).split(sep) if cm.get("connected_card_ids") in cc else []:
+        case_card.append((cid, _clean(r.get(cm.get("card_id", "card_id"), r.get("card_id"))), "PRIMARY"))
+        conn_cards = r.get(cm.get("connected_card_ids", "connected_card_ids"), r.get("connected_card_ids", ""))
+        for c in _clean(conn_cards).split(sep):
             if c.strip():
                 case_card.append((cid, c.strip(), "CONNECTED"))
 
     pack = pd.DataFrame({
-        "case_id": cp[pm["case_id"]].map(_clean),
-        "trigger_type": cp[pm["trigger_type"]].map(_clean).str.upper(),
-        "trigger_time": pd.to_datetime(cp[pm["trigger_time"]], errors="coerce").dt.strftime("%Y-%m-%d %H:%M:%S") if pm.get("trigger_time") in cp else "",
-        "card_id": cp[pm["card_id"]].map(_clean) if pm.get("card_id") in cp else "",
-        "customer_id": cp[pm["customer_id"]].map(_clean) if pm.get("customer_id") in cp else "",
-        "trigger_txn_id": cp[pm["trigger_txn_id"]].map(_num_str) if pm.get("trigger_txn_id") in cp else "",
-        "risk_score": pd.to_numeric(cp[pm["risk_score"]], errors="coerce") if pm.get("risk_score") in cp else np.nan,
-        "detail": cp[pm["detail"]].map(_clean) if pm.get("detail") in cp else "",
+        "case_id": _cget(cp, pm, "case_id").map(_clean),
+        "trigger_type": _cget(cp, pm, "trigger_type").map(_clean).str.upper(),
+        "trigger_time": pd.to_datetime(_cget(cp, pm, "trigger_time"), errors="coerce").dt.strftime("%Y-%m-%d %H:%M:%S"),
+        "card_id": _cget(cp, pm, "card_id").map(_clean),
+        "customer_id": _cget(cp, pm, "customer_id").map(_clean),
+        "trigger_txn_id": _cget(cp, pm, "trigger_txn_id").map(_num_str),
+        "risk_score": pd.to_numeric(_cget(cp, pm, "risk_score"), errors="coerce").fillna(0).round(4),
+        "detail": _cget(cp, pm, "detail").map(_clean),
     })
 
     # ---------------------------------------------------------------- write

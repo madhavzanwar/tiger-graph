@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "verdict"
 version = "0.1.0"
-description = "VERDICT - agentic fraud investigation on TigerGraph (HHGOA 2026)"
+description = "TRACER - agentic fraud investigation on TigerGraph (HHGOA 2026)"
 requires-python = ">=3.10"
 dependencies = [
   "pyTigerGraph>=2.0.4",
@@ -30,6 +30,7 @@ fastembed = ["fastembed"]
 
 [project.scripts]
 verdict = "verdict.cli:main"
+tracer = "verdict.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["verdict*"]

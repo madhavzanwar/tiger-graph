@@ -1,4 +1,4 @@
-# ARGUS: Institutional Graph Risk & Fraud Intelligence on TigerGraph
+# TRACER: Institutional Graph Risk & Fraud Intelligence on TigerGraph
 ## 100% Compliant Official Submission — Hacker House Goa 2026 (IEEE-CIS Edition)
 
 > **From an uncertain trigger to a defensible, audit-proof action.**  
@@ -8,7 +8,7 @@
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel%20Production-blueviolet.svg)](https://hhgoa26-ten.vercel.app)
 [![TigerGraph](https://img.shields.io/badge/TigerGraph-Savanna%20%7C%20MCP%20%7C%20GSQL-orange.svg)](https://www.tigergraph.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](verdict/api/)
-[![React](https://img.shields.io/badge/React%2018-ARGUS%20UI-61dafb.svg)](ui/)
+[![React](https://img.shields.io/badge/React%2018-TRACER%20UI-61dafb.svg)](ui/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 🌐 **Live Production Deployment**: [**https://hhgoa26-ten.vercel.app**](https://hhgoa26-ten.vercel.app)  
@@ -40,7 +40,7 @@ Calibrated against 5,565 historical closed cases, displaying reliability curves 
 
 ## ⚡ Key Architectural Breakthroughs
 
-ARGUS is engineered specifically for the messy middle of financial fraud: alerts that are neither trivially false positives nor trivially obvious scams.
+TRACER is engineered specifically for the messy middle of financial fraud: alerts that are neither trivially false positives nor trivially obvious scams.
 
 - **Dual-Engine Graph Gateway**: Seamlessly bridges **TigerGraph MCP**, **TigerGraph Savanna REST API**, and a zero-dependency **`LocalGraphGateway`** in-memory execution engine that executes all 14 GSQL queries offline with zero runtime crashes.
 - **Bayesian Log-Odds Evidence Ledger**: Transforms multi-hop topological graph findings into additive log-odds evidence updates, reporting calibrated posterior distributions with bootstrap 80% credible intervals (`ci80`).
@@ -56,7 +56,7 @@ ARGUS is engineered specifically for the messy middle of financial fraud: alerts
 ```mermaid
 flowchart LR
   T[Trigger<br/>risk alert · customer dispute · analyst] --> O
-  subgraph Agent[ARGUS Cyclic Orchestrator]
+  subgraph Agent[TRACER Cyclic Orchestrator]
     O[Finite State Machine] --> L[Evidence Ledger<br/>Log-Odds + Bootstrap 80% CI]
     L --> V[Value of Information<br/>EVSI net financial gain vs cost]
     V --> P[Policy-as-Code Engine<br/>R1-R10 · Approval Routes · SAR]
@@ -105,7 +105,7 @@ OFFICIAL HACKATHON EVALUATION SUITE: VALIDATING 20 CASES IN cases/
 PERFECT SCORE: ALL 20 CASES PASS 100% OF HACKATHON VALIDATION CRITERIA!
 ```
 
-### 5. Launch the ARGUS Analyst Console
+### 5. Launch the TRACER Analyst Console
 Start the full-stack web dashboard (FastAPI backend + Cytoscape interactive graph):
 ```bash
 python -m verdict.cli serve
@@ -181,7 +181,7 @@ hhgoa26/
 │   ├── rag/                  # GraphRAG precedent & regulation retriever
 │   ├── scoring/              # Signal extraction, Bayesian ledger, VOI engine
 │   └── api/                  # FastAPI web server & SSE event streaming
-├── ui/                       # ARGUS Institutional Graph Risk Platform (React 18 + Cytoscape)
+├── ui/                       # TRACER Institutional Graph Risk Platform (React 18 + Cytoscape)
 ├── docs/                     # Documentation & presentation assets
 │   ├── screenshots/          # High-resolution application screenshots
 │   └── submission.md         # Official form submission answers

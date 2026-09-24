@@ -1,16 +1,13 @@
-# Social Media Announcement Copy: ARGUS on TigerGraph
-
+# Social Media Announcement Copy: TRACER on TigerGraph
 ---
 
 ## 💼 LinkedIn Post
 
-🚀 Excited to unveil **ARGUS**: my official submission for the **TigerGraph Agentic Fraud Investigation Hackathon (Hacker House Goa 2026 - IEEE-CIS Edition)**! 🕵️‍♂️💳
-
+🚀 Excited to unveil **TRACER**: my official submission for the **TigerGraph Agentic Fraud Investigation Hackathon (Hacker House Goa 2026 - IEEE-CIS Edition)**! 🕵️‍♂️💳
 In financial fraud investigation, the hardest question isn't *"Is this transaction suspicious?"*  
 It's: **"Do we know enough to take a high-impact punitive action right now, or should we gather more evidence first?"**
 
-Traditional AI agents rely on ungrounded LLM guesswork, causing severe false positives or catastrophic lag. With **ARGUS**, I fused **TigerGraph Graph Data Science**, **Bayesian Decision Theory (VOI/EVSI)**, and **FinCEN Regulatory Automation** into an institutional AI risk platform:
-
+Traditional AI agents rely on ungrounded LLM guesswork, causing severe false positives or catastrophic lag. With **TRACER**, I fused **TigerGraph Graph Data Science**, **Bayesian Decision Theory (VOI/EVSI)**, and **FinCEN Regulatory Automation** into an institutional AI risk platform:
 🔍 **TigerGraph MCP & 14 GSQL Queries**: Traverses 26,000+ real transactions across 24h sliding velocity windows, device-sharing rings (WCC/Louvain), and geographic travel anomalies.  
 📊 **Bayesian Log-Odds Evidence Ledger**: Every risk point is decomposed into an additive ledger with calibrated 80% credible intervals (`ci80`) from 200 bootstrap refits—zero mathematical hallucinations.  
 ⚖️ **Value of Information (VOI/EVSI)**: Computes the net financial utility of evidence requests in dollars. The agent asks the customer or triggers step-up authentication *only* when the answer could flip the decision and is worth the operational cost.  
@@ -31,8 +28,7 @@ Huge thanks to @TigerGraphDB and @247pmstudio for hosting this challenging and r
 ## 🐦 X / Twitter Thread
 
 ### Tweet 1 (Main Announcement)
-Excited to launch **ARGUS** for the @TigerGraphDB & @247pmstudio #HackerHouseGoa Agentic Fraud Investigation Challenge! 🕵️‍♂️💳
-
+Excited to launch **TRACER** for the @TigerGraphDB & @247pmstudio #HackerHouseGoa Agentic Fraud Investigation Challenge! 🕵️‍♂️💳
 An autonomous graph risk platform that knows *when* it knows enough to act:
 ⚡ 14 GSQL Queries via TigerGraph MCP
 📊 Bayesian Log-Odds Evidence Ledger
@@ -43,9 +39,8 @@ An autonomous graph risk platform that knows *when* it knows enough to act:
 Live Demo & Repo below 🧵👇
 
 ### Tweet 2 (Architecture & Math)
-Why ARGUS is different:
-Instead of relying on LLM vibes, ARGUS calculates the Expected Value of Sample Information in dollars. It requests evidence only if EVSI > Cost, preventing unwarranted card freezes under Bank Policy R1 while isolating high-velocity syndicates.
-
+Why TRACER is different:
+Instead of relying on LLM vibes, TRACER calculates the Expected Value of Sample Information in dollars. It requests evidence only if EVSI > Cost, preventing unwarranted card freezes under Bank Policy R1 while isolating high-velocity syndicates.
 ### Tweet 3 (Graph Data Science & UI)
 Traverses 26k+ transactions with Louvain community detection and WCC. Every case is persisted back to TigerGraph for GraphRAG precedent retrieval.
 

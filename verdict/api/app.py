@@ -23,7 +23,7 @@ from verdict.config import ROOT, settings
 from verdict.outputs import answer_writer
 from verdict.outputs.benchmark import graph_check, load_oracle
 
-app = FastAPI(title="VERDICT", version="0.1.0")
+app = FastAPI(title="TRACER", version="0.1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 STATE: dict = {"shared": None, "inv": {}, "events": {}, "lock": threading.Lock(), "learn_log": []}
