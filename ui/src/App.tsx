@@ -422,7 +422,7 @@ function TriageIncidentsView({
         <div className="summary-metric-card">
           <div className="metric-header">
             <span className="metric-title">Active Incident Pack</span>
-            <span className="metric-tag">IEEE-CIS</span>
+            <span className="metric-tag">BENCHMARK</span>
           </div>
           <div className="metric-value">{totalCount} Cases</div>
           <div className="metric-footer">

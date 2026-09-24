@@ -3,7 +3,7 @@
 
 ## 💼 LinkedIn Post
 
-🚀 Excited to unveil **TRACER**: my official submission for the **TigerGraph Agentic Fraud Investigation Hackathon (Hacker House Goa 2026 - IEEE-CIS Edition)**! 🕵️‍♂️💳
+🚀 Excited to unveil **TRACER**: my official submission for the **TigerGraph Agentic Fraud Investigation Hackathon (Hacker House Goa 2026)**! 🕵️‍♂️💳
 In financial fraud investigation, the hardest question isn't *"Is this transaction suspicious?"*  
 It's: **"Do we know enough to take a high-impact punitive action right now, or should we gather more evidence first?"**
 
@@ -13,7 +13,7 @@ Traditional AI agents rely on ungrounded LLM guesswork, causing severe false pos
 ⚖️ **Value of Information (VOI/EVSI)**: Computes the net financial utility of evidence requests in dollars. The agent asks the customer or triggers step-up authentication *only* when the answer could flip the decision and is worth the operational cost.  
 🛡️ **Policy-as-Code & FinCEN SARs**: Strict Policy R1–R10 enforcement with automated approval routing (Auto, L1 Lead, L2 Manager) and programmatic n-gram claim checking on all filed SAR narratives.  
 🖥️ **Institutional Risk Console**: Built with React 18, Cytoscape topology visualization, dynamic layout switchers (Force, Concentric, Tree, Circle), and master-detail split triage.  
-🏆 **100% Benchmark Score**: Flawlessly passed all 20 official IEEE-CIS exam cases (`HHG-001` to `HHG-020`) with zero schema errors!
+🏆 **100% Benchmark Score**: Flawlessly passed all 20 official hackathon exam cases (`HHG-001` to `HHG-020`) with zero schema errors!
 
 Huge thanks to @TigerGraphDB and @247pmstudio for hosting this challenging and rewarding hackathon!
 

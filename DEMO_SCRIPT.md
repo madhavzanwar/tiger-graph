@@ -1,5 +1,5 @@
 # TRACER: 3–5 Minute Video Demo Presentation Script
-### TigerGraph Agentic Fraud Investigation Hackathon (Hacker House Goa 2026 - IEEE-CIS Edition)
+### TigerGraph Agentic Fraud Investigation Hackathon (Hacker House Goa 2026)
 
 **Presenter:** Lead Systems Architect / Fraud Investigator  
 **Duration:** 3–5 Minutes (180–300 seconds)  

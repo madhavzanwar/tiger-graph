@@ -1,5 +1,5 @@
 # Maps raw dataset files/columns -> VERDICT canonical fields.
-# When the official HHGOA_IEEE files arrive, only this file should need editing.
+# When the official dataset files arrive, only this file should need editing.
 files:
   transactions: transactions.csv
   identity: identity.csv

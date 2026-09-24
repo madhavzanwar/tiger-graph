@@ -1,7 +1,7 @@
 # Engineering TRACER: Institutional Graph Risk & Fraud Intelligence on TigerGraph
-### Fusing Graph Data Science, Bayesian Decision Theory (VOI), and FinCEN SAR Automation for Hacker House Goa 2026 (IEEE-CIS Edition)
+### Fusing Graph Data Science, Bayesian Decision Theory (VOI), and FinCEN SAR Automation for Hacker House Goa 2026
 
-*By Madhav Zanwar · Built for TigerGraph Hacker House Goa 2026 (IEEE-CIS Edition)*
+*By Madhav Zanwar · Built for TigerGraph Hacker House Goa 2026*
 
 🌐 **Live Production Console**: [https://hhgoa26-ten.vercel.app](https://hhgoa26-ten.vercel.app)  
 📁 **GitHub Repository**: [https://github.com/madhavzanwar/tiger-graph](https://github.com/madhavzanwar/tiger-graph)
@@ -32,7 +32,7 @@ In this project, we built **TRACER** (*Autonomous Risk & Graph Understanding Sys
 2. **Decision-Theoretic Value of Information (VOI)**: Calculating the Expected Value of Sample Information (EVSI) in dollars before contacting customers.
 3. **Graph Data Science on TigerGraph**: Weakly Connected Components (WCC), Louvain community detection, and PageRank across 26,000+ real transactions.
 4. **Zero-Hallucination FinCEN SAR Automation**: Programmatic claim checking against graph ground truth.
-5. **100% Benchmark Compliance**: Achieving a flawless 20/20 on the official IEEE-CIS hackathon exam pack.
+5. **100% Benchmark Compliance**: Achieving a flawless 20/20 on the official hackathon benchmark pack.
 
 ---
 
@@ -161,7 +161,7 @@ Drafting SAR narratives with LLMs is notoriously dangerous because models halluc
 
 ## 8. Benchmark Results: 100% Evaluation Compliance
 
-We evaluated TRACER against the official IEEE-CIS benchmark dataset (`case_pack.csv`):
+We evaluated TRACER against the official benchmark dataset (`case_pack.csv`):
 
 ```
 ==========================================================================================

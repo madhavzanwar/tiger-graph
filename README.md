@@ -1,5 +1,5 @@
 # TRACER: Institutional Graph Risk & Fraud Intelligence on TigerGraph
-## 100% Compliant Official Submission — Hacker House Goa 2026 (IEEE-CIS Edition)
+## 100% Compliant Official Submission — Hacker House Goa 2026
 
 > **From an uncertain trigger to a defensible, audit-proof action.**  
 > An autonomous graph risk intelligence platform uniting **Graph Data Science (GDS)**, **Bayesian Decision Theory (VOI / EVSI)**, **FinCEN SAR Regulatory Automation**, and an **Institutional Risk Adjudication Workbench**.
@@ -85,7 +85,7 @@ pip install -r requirements.txt
 ```
 
 ### 3. Run Benchmark Across All 20 Cases
-Executes the autonomous agent pipeline across all 20 official IEEE-CIS exam cases (`HHG-001` through `HHG-020`):
+Executes the autonomous agent pipeline across all 20 official benchmark exam cases (`HHG-001` through `HHG-020`):
 ```bash
 python -m verdict.cli benchmark
 ```
@@ -116,7 +116,7 @@ Open your browser to: **`http://localhost:8000`**
 
 ## 📊 Benchmark Evaluation Scorecard
 
-Evaluated on the official IEEE-CIS dataset (`case_pack.csv`, `transactions.csv`, `identity.csv`, `closed_cases_history.csv`):
+Evaluated on the official benchmark dataset (`case_pack.csv`, `transactions.csv`, `identity.csv`, `closed_cases_history.csv`):
 
 | Case ID | Verdict | Pattern | P(fraud) | Exposure | SAR Filed | Final Recommended Actions | Policy Status |
 | :--- | :--- | :--- | :---: | :---: | :---: | :--- | :--- |
@@ -165,7 +165,7 @@ where customer verification cost is balanced against financial exposure and fals
 ```
 hhgoa26/
 ├── cases/                    # Official submission JSON files (HHG-001.json - HHG-020.json)
-├── data/hhgoa/               # Official IEEE-CIS Hackathon benchmark dataset
+├── data/hhgoa/               # Official Hackathon benchmark dataset
 ├── graph/
 │   ├── schema.gsql           # Enterprise TigerGraph schema definition
 │   ├── queries/              # 14 installed GSQL analytical algorithms
@@ -195,4 +195,4 @@ hhgoa26/
 ---
 
 ## ⚖️ License
-Apache-2.0 License. Built for the TigerGraph Agentic Fraud Investigation Hackathon (Hacker House Goa 2026 - IEEE-CIS Edition).
+Apache-2.0 License. Built for the TigerGraph Agentic Fraud Investigation Hackathon (Hacker House Goa 2026).

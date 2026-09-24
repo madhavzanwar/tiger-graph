@@ -1,6 +1,6 @@
-"""Synthetic HHGOA-shaped dataset generator.
+"""Synthetic dataset generator.
 
-This is NOT the HHGOA_IEEE dataset. It produces files with the same *shape* (IEEE-CIS style
+This is a synthetic generator producing files with the same schema
 columns plus customer_id / timestamp / channel / risk_score, closed cases, a 20-case pack and
 policy documents) so the whole pipeline can be built and tested end-to-end before the real
 data is available. Column names are mapped through ``schema_map.yaml`` so switching to the real

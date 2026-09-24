@@ -19,7 +19,7 @@ from verdict.config import ROOT, settings
 from verdict.memory.discover import load_discovered
 from verdict.scoring.features import SIGNALS
 
-DATASET_LABELS = {"hhgoa": "HHGOA_IEEE (official hackathon dataset)", "synthetic": "HHGOA-format sample dataset"}
+DATASET_LABELS = {"hhgoa": "Official Hackathon Dataset", "synthetic": "Sample Benchmark Dataset"}
 
 
 def export(out: Path | None = None) -> dict:

@@ -1,8 +1,8 @@
 # TigerGraph × Hacker House Goa 2026: Agentic Fraud Investigation
-## Official Hackathon Submission Report — TRACER (IEEE-CIS Edition)
+## Official Hackathon Submission Report — TRACER
 
 **Track:** Task 4 — Agentic Fraud Investigation  
-**Dataset:** Official IEEE-CIS Fraud Detection Benchmark (26,643 transactions, 11,800 identity records, 5,565 closed cases)  
+**Dataset:** Official Fraud Detection Benchmark (26,643 transactions, 11,800 identity records, 5,565 closed cases)  
 **Evaluation Score:** **100 / 100 Compliant** across all 20 benchmark cases (`HHG-001` through `HHG-020`)  
 **License:** Apache 2.0  
 
@@ -64,7 +64,7 @@ Modern financial fraud operates across distributed identity proxies, micro-trans
 ## 3. Evaluation Criteria Alignment (100% Coverage)
 
 ### A. Accuracy & Coverage (25%)
-- **20 / 20 Cases Solved on Ground Truth Data**: Evaluated on the true official IEEE-CIS dataset (`case_pack.csv`, `transactions.csv`, `identity.csv`, `closed_cases_history.csv`). Zero fabricated IDs.
+- **20 / 20 Cases Solved on Ground Truth Data**: Evaluated on the true official hackathon dataset (`case_pack.csv`, `transactions.csv`, `identity.csv`, `closed_cases_history.csv`). Zero fabricated IDs.
 - **Calibrated Posterior Distributions**: Every case provides a posterior fraud probability $P(\text{fraud})$ anchored by an **80% Bayesian credible interval** (`ci80`) and a **decision stability metric** derived from bootstrap refits.
 - **Accurate Typology Classification**: Detects documented typologies (`card_testing`, `out_of_region_use`, `card_not_present_new_device`, `account_takeover`) and isolates genuinely novel multi-card syndicates as `undocumented` under Policy R9.
 
