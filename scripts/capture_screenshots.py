@@ -5,7 +5,7 @@ import os
 os.makedirs("docs/screenshots", exist_ok=True)
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True)
+    browser = p.chromium.launch(channel="chrome", headless=True)
     context = browser.new_context(
         viewport={"width": 1600, "height": 1000},
         device_scale_factor=2
@@ -20,58 +20,57 @@ with sync_playwright() as p:
     print("Capturing dashboard.png...")
     page.screenshot(path="docs/screenshots/dashboard.png", full_page=False)
 
-    # 2. Open Investigation Chamber via header button
-    print("Navigating to Investigation Chamber...")
+    # 2. Open Investigation Chamber / Entity Dossier
+    print("Navigating to Entity Dossier (HHG-001)...")
     try:
-        header_dossier_btn = page.locator("button:has-text('View Dossier')").first
-        if header_dossier_btn.is_visible():
-            header_dossier_btn.click()
+        open_btn = page.locator("button:has-text('Open Full Dossier')").first
+        if open_btn.is_visible():
+            open_btn.click()
         else:
-            page.locator("text=Dossier →").first.click()
-        
-        # Wait for graph intelligence topology
-        page.wait_for_selector("text=Graph Intelligence Topology", timeout=12000)
-        time.sleep(5)  # allow cytoscape to layout
+            page.locator("button:has-text('Entity Dossier')").first.click()
+        time.sleep(5)
         print("Capturing investigation.png...")
         page.screenshot(path="docs/screenshots/investigation.png", full_page=False)
+        print("Capturing room_ring.png...")
+        page.screenshot(path="docs/screenshots/room_ring.png", full_page=False)
     except Exception as e:
         print(f"Investigation chamber capture error: {e}")
 
-    # 3. Open FinCEN Regulatory Hub
-    print("Navigating to FinCEN Regulatory Hub...")
+    # 3. Open FinCEN SAR Regulatory Center
+    print("Navigating to SAR Regulatory Center...")
     try:
-        sar_nav = page.locator("button:has-text('FinCEN Regulatory Hub')").first
-        if sar_nav.is_visible():
-            sar_nav.click()
+        sar_btn = page.locator("button:has-text('SAR Regulatory Center')").first
+        if sar_btn.is_visible():
+            sar_btn.click()
             time.sleep(3)
             print("Capturing sar_hub.png...")
             page.screenshot(path="docs/screenshots/sar_hub.png", full_page=False)
     except Exception as e:
-        print(f"FinCEN tab click error: {e}")
+        print(f"SAR center tab click error: {e}")
 
-    # 4. Open Bayesian Scoreboard
-    print("Navigating to Bayesian Scoreboard...")
+    # 4. Open Risk Engine Observatory
+    print("Navigating to Risk Engine Observatory...")
     try:
-        score_nav = page.locator("button:has-text('Bayesian Scoreboard')").first
-        if score_nav.is_visible():
-            score_nav.click()
+        obs_btn = page.locator("button:has-text('Risk Engine Observatory')").first
+        if obs_btn.is_visible():
+            obs_btn.click()
             time.sleep(3)
             print("Capturing scoreboard.png...")
             page.screenshot(path="docs/screenshots/scoreboard.png", full_page=False)
     except Exception as e:
-        print(f"Scoreboard tab click error: {e}")
+        print(f"Observatory tab click error: {e}")
 
-    # 5. Open Policy-as-Code Engine
-    print("Navigating to Policy-as-Code Engine...")
+    # 5. Open Governance & SOP Policy Engine
+    print("Navigating to Governance & SOP...")
     try:
-        policy_nav = page.locator("button:has-text('Policy-as-Code Engine')").first
-        if policy_nav.is_visible():
-            policy_nav.click()
+        gov_btn = page.locator("button:has-text('Governance & SOP')").first
+        if gov_btn.is_visible():
+            gov_btn.click()
             time.sleep(3)
             print("Capturing policy.png...")
             page.screenshot(path="docs/screenshots/policy.png", full_page=False)
     except Exception as e:
-        print(f"Policy tab click error: {e}")
+        print(f"Governance tab click error: {e}")
 
     browser.close()
-    print("Screenshots captured successfully!")
+    print("All screenshots successfully captured with TRACER branding!")
